@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dettaglio Ticket</title>
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+	rel="stylesheet">
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body>
+	<div class="container mt-4">
+		<h1 class="mb-4">Dettaglio Ticket</h1>
+
+		<div th:if="${ticket != null}">
+			<div class="card">
+				<div class="card-header bg-primary text-white"></div>
+				<div class="card-body">
+					<dl class="row">
+						<dt class="col-sm-3">Assegnato a:</dt>
+						<dd class="col-sm-9" th:text="${ticket.user.nome + ' ' + ticket.user.cognome}"></dd>
+						<dt class="col-sm-3">Titolo:</dt>
+						<dd class="col-sm-9" th:text="${ticket.titolo}"></dd>
+						<dt class="col-sm-3">Descrizione:</dt>
+						<dd class="col-sm-9" th:text="${ticket.descrizione}"></dd>
+						<dt class="col-sm-3">Stato:</dt>
+						<dd class="col-sm-9" th:text="${ticket.stato}"></dd>
+						<dt class="col-sm-3">Categoria:</dt>
+						<dd class="col-sm-9" th:text="${ticket.categoria.nome}"></dd>
+						<dt class="col-sm-3">Data Creazione:</dt>
+						<dd class="col-sm-9" th:text="${ticket.dataCreazione}"></dd>
+						<dt class="col-sm-3">Data Modifica:</dt>
+						<dd class="col-sm-9" th:text="${ticket.dataModifica}"></dd>
+					</dl>
+				</div>
+			</div>
+		</div>
+
+		<div class="text-center mt-4">
+			<a href="#" class="btn btn-secondary" onclick="history.back()"> <i
+				class="bi bi-arrow-left"></i> Torna Indietro
+			</a>
+		</div>
+	</div>
+
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crea Nota</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Crea una Nuova Nota</h1>
+
+        <!-- Form per la creazione della nota -->
+        <form th:action="@{/note/create}" method="post" th:object="${nota}">
+            <!-- Campo nascosto per l'ID del ticket -->
+            <input type="hidden" name="ticketId" th:value="${ticketId}"/>
+
+            <!-- Campo per l'autore -->
+            	<div class="mb-3">
+						<label for="titolo" class="form-label">Autore</label> <input
+							type="text" id="titolo" name="titolo" class="form-control"
+							th:value="${#authentication.principal.nome} + ' ' + ${#authentication.principal.cognome}" readonly>
+					</div>
+
+            <!-- Campo per il testo della nota -->
+            <div class="form-group">
+                <label for="testo">Testo della Nota</label>
+                <textarea class="form-control" id="testo" name="testo" th:field="*{testo}" rows="4" placeholder="Inserisci il testo della nota" required></textarea>
+            </div>
+
+            <!-- Bottone di invio -->
+            <button type="submit" class="btn btn-primary">Salva Nota</button>
+            <a th:href="@{/note/ticket/{ticketId}(ticketId=${ticketId})}" class="btn btn-secondary">Annulla</a>
+        </form>
+    </div>
+
+    <!-- Include JavaScript Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

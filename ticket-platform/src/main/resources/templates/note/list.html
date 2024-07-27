@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Note del Ticket</title>
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+	rel="stylesheet">
+</head>
+<body>
+	<div class="container mt-4">
+		<h1 class="mb-4">Note del Ticket</h1>
+
+		<div th:if="${note != null && !note.isEmpty()}">
+			<div class="card-deck">
+				<div th:each="nota : ${note}" class="card mb-4">
+					<div class="card-body">
+						<h5 class="card-title">
+							Nota #<span th:text="${nota.id}"></span>
+						</h5>
+						<p class="card-text">
+							<strong>Autore:</strong> <span th:text="${nota.autore}"></span>
+						</p>
+						<p class="card-text">
+							<strong>Testo:</strong> <span th:text="${nota.testo}"></span>
+						</p>
+					</div>
+					<div class="card-footer">
+						<small class="text-muted">Creata il <span
+							th:text="${#dates.format(nota.dataCreazione, 'dd/MM/yyyy HH:mm')}"></span></small>
+						<a th:href="@{/note/edit/{id}(id=${nota.id})}"
+							class="btn btn-warning btn-sm mt-2"> <i class="bi bi-pencil"></i>
+							Modifica
+						</a>
+						<form th:action="@{/note/delete/{id}(id=${nota.id})}"
+							method="post" style="display: inline;">
+							<button type="submit" class="btn btn-danger mt-2">
+								Elimina</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div th:if="${note == null || note.isEmpty()}">
+			<p>Non ci sono note per questo ticket. Aggiungi una nuova nota.</p>
+		</div>
+
+		<div class="text-center mt-4">
+			<a class="btn btn-primary"
+				th:href="@{/note/create/{ticketId}(ticketId=${ticketId})}">
+				<i class="bi bi-plus-circle"></i> Crea Nota
+			</a> <a href="/admin/dashboard" class="btn btn-secondary"
+				sec:authorize="hasAuthority('ADMIN')"> <i
+				class="bi bi-arrow-left"></i> Torna alla Dashboard
+			</a> <a href="/operatore/dashboard" class="btn btn-secondary"
+				sec:authorize="hasAuthority('OPERATORE')"> <i
+				class="bi bi-arrow-left"></i> Torna alla Dashboard
+			</a>
+
+		</div>
+
+		<script
+			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+		<script
+			src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+</body>
+</html>
+
