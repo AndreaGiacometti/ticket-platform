@@ -13,7 +13,7 @@
          <!-- Mostra un messaggio se non ci sono risultati -->
         <div th:if="${#lists.isEmpty(tickets)}" class="alert alert-info">
             Nessun ticket trovato per la tua ricerca.
-        </div>
+        </div>	
         <!-- Campo di ricerca -->
     <form action="/ticket/search" method="get" class="mb-4">
         <div class="input-group">
