@@ -44,6 +44,10 @@ public class DatabaseUserDetails implements UserDetails {
 		return this.authorities;
 	}
 
+	public int getId() {
+		return this.id;
+	}
+	
 	@Override
 	public String getPassword() {
 		return this.password;

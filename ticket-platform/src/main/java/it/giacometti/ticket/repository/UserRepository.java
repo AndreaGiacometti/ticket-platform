@@ -8,4 +8,5 @@ import it.giacometti.ticket.model.User;
 
 public interface UserRepository extends JpaRepository<User, Integer>{
 	Optional<User> findByEmail(String email);
+
 }

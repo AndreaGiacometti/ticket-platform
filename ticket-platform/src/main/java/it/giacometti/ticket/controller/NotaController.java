@@ -1,14 +1,20 @@
 package it.giacometti.ticket.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import it.giacometti.ticket.model.Nota;
 import it.giacometti.ticket.model.Ticket;
+import it.giacometti.ticket.model.User;
 import it.giacometti.ticket.repository.NotaRepository;
 import it.giacometti.ticket.repository.TicketRepository;
+import it.giacometti.ticket.repository.UserRepository;
+import it.giacometti.ticket.security.DatabaseUserDetails;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,6 +28,9 @@ public class NotaController {
 
     @Autowired
     private TicketRepository ticketRepository;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     // Mostra la lista delle note per un ticket specifico
     @GetMapping("/ticket/{ticketId}")
@@ -40,17 +49,43 @@ public class NotaController {
       
         return "note/create"; // Nome della vista per creare una nuova nota
     }
-
-    // Salva una nuova nota
+    
     @PostMapping("/create")
     public String createNota(@RequestParam int ticketId, @ModelAttribute Nota nota) {
+        // Recupera il ticket dal repository usando l'ID del ticket
         Ticket ticket = ticketRepository.findById(ticketId).orElse(null);
         if (ticket != null) {
+            // Imposta il ticket per la nota
             nota.setTicket(ticket);
-            nota.setDataCreazione(LocalDate.now()); // Imposta la data di creazione
+            // Imposta la data di creazione della nota alla data corrente
+            nota.setDataCreazione(LocalDate.now());
+
+            // Ottiene l'autenticazione dell'utente attuale dal contesto di sicurezza
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+                if (principal instanceof UserDetails) {
+                    // Se il principal è un'istanza di UserDetails, ottiene i dettagli dell'utente
+                    DatabaseUserDetails userDetails = (DatabaseUserDetails) principal;
+                    // Ottiene il Nome dell'utente autenticato
+                    String autore = userDetails.getNome() + " " + userDetails.getCognome();
+                    // Ottiene l'id dell'utente autenticato
+                    int id_operatore = userDetails.getId();
+                   
+                    nota.setAutore(autore);
+                 // Recupera l'oggetto User dal repository usando l'ID
+                    User user = userRepository.findById(id_operatore).orElse(null);
+                    if (user != null) {
+                        nota.setUser(user);
+                    }
+                }
+            }
+
+            // Salva la nota nel repository
             notaRepository.save(nota);
         }
-        return "redirect:/note/ticket/" + ticketId; // Ritorna alla lista delle note del ticket
+        // Reindirizza alla lista delle note del ticket specificato
+        return "redirect:/note/ticket/" + ticketId;
     }
  // Mostra il form per modificare una nota esistente
     @GetMapping("/edit/{id}")

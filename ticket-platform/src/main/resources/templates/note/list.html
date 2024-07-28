@@ -29,18 +29,30 @@
 							<strong>Testo:</strong> <span th:text="${nota.testo}"></span>
 						</p>
 					</div>
-					<div class="card-footer">
+				<div class="card-footer">
+				<div>
 						<small class="text-muted">Creata il <span
-							th:text="${#dates.format(nota.dataCreazione, 'dd/MM/yyyy HH:mm')}"></span></small>
-						<a th:href="@{/note/edit/{id}(id=${nota.id})}"
-							class="btn btn-warning btn-sm mt-2"> <i class="bi bi-pencil"></i>
-							Modifica
-						</a>
-						<form th:action="@{/note/delete/{id}(id=${nota.id})}"
-							method="post" style="display: inline;">
-							<button type="submit" class="btn btn-danger mt-2">
-								Elimina</button>
-						</form>
+							th:text="${nota.dataCreazione}"></span></small>
+					</div>
+					<div>		
+							<small class="text-muted">Modificata il <span
+							th:text="${nota.dataModifica}"></span></small>
+							</div>
+		<div class="d-inline-block my-2">
+    <a th:href="@{/note/edit/{id}(id=${nota.id})}"
+       class="btn btn-warning btn-sm mt-2 d-inline-flex align-items-center mr-2">
+        <i class="bi bi-pencil"></i>
+        <span class="ms-1">Modifica</span>
+    </a>
+</div>
+<div class="d-inline-block">
+    <form th:action="@{/note/delete/{id}(id=${nota.id})}" method="post" style="display: inline;">
+        <button type="submit" class="btn btn-danger btn-sm mt-2 d-inline-flex align-items-center">
+            <i class="bi bi-trash"></i>
+            <span class="ms-1">Elimina</span>
+        </button>
+    </form>
+</div>
 					</div>
 				</div>
 			</div>
