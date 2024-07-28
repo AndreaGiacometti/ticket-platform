@@ -76,8 +76,9 @@ public class TicketController {
 		List<String> statuses = Arrays.asList("da fare", "in corso", "completato");
 		model.addAttribute("statuses", statuses);
 		
-		List<Categoria> categories = categoriaRepository.findAll();
-		model.addAttribute("categories", categories);
+		// Aggiungi la lista delle categorie al modello
+				List<Categoria> categorie = categoriaRepository.findAll();
+				model.addAttribute("categorie", categorie);
 		return "ticket/editTicket";
 	}
 
