@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Note del Ticket</title>
 <link
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
 	rel="stylesheet">
 <link
-	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
 	rel="stylesheet">
 </head>
 <body>
@@ -18,14 +18,16 @@
 		<div th:if="${note != null && !note.isEmpty()}">
 			<div class="card-deck">
 				<div th:each="nota : ${note}" class="card mb-4">
+				
 					<div class="card-body">
 						<p class="card-text">
 							<strong>Autore:</strong> <span th:text="${nota.autore}"></span>
 						</p>
 						<p class="card-text">
-						<span th:text="${nota.testo}"></span>
+							<span th:text="${nota.testo}"></span>
 						</p>
 					</div>
+					
 					<div class="card-footer">
 						<div>
 							<small class="text-muted">Creata il <span
@@ -35,12 +37,14 @@
 							<small class="text-muted">Modificata il <span
 								th:text="${nota.dataModifica}"></span></small>
 						</div>
+						
 						<div class="d-inline-block my-2">
 							<a th:href="@{/note/edit/{id}(id=${nota.id})}"
 								class="btn btn-warning btn-sm mt-2 d-inline-flex align-items-center mr-2">
 								<i class="bi bi-pencil"></i> <span class="ms-1">Modifica</span>
 							</a>
 						</div>
+						
 						<div class="d-inline-block">
 							<form th:action="@{/note/delete/{id}(id=${nota.id})}"
 								method="post" style="display: inline;">
@@ -50,6 +54,7 @@
 								</button>
 							</form>
 						</div>
+						
 					</div>
 				</div>
 			</div>
@@ -75,9 +80,9 @@
 	</div>
 
 	<script
-			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-		<script
-			src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
 

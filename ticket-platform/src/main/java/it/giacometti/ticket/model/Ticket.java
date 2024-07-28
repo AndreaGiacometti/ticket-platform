@@ -129,4 +129,5 @@ public class Ticket {
     public void setNote(List<Nota> note) {
         this.note = note;
     }
+
 }

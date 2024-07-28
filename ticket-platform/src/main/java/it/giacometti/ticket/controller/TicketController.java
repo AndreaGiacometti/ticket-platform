@@ -66,29 +66,22 @@ public class TicketController {
 	}
 
 	@PostMapping("/ticket/create")
-	public String store(@Valid @ModelAttribute("ticket") Ticket formTicket, 
-	                    BindingResult bindingResult, 
-	                    Model model) {
-	    // Verifica se ci sono errori di validazione del ticket
-	    if (bindingResult.hasErrors()) {
-	        return "ticket/create"; // Ritorna alla vista del form con gli errori di validazione
-	    }
-	    
-	    User user = userRepository.findById(formTicket.getUser().getId())
-	            .orElse(null);
+	public String createTicket(@ModelAttribute Ticket ticket, Model model) {
+	    // Recupera l'operatore associato al ticket
+	    User operatore = userRepository.findById(ticket.getUser().getId())
+	            .orElseThrow(() -> new IllegalArgumentException("Operatore non trovato"));
 
-	    if (user == null || !"attivo".equalsIgnoreCase(user.getStatoPersonale())) {
-	        model.addAttribute("errorMessage", "L'operatore selezionato non è attivo.");
-	        System.out.println("Errore: L'operatore selezionato non è attivo.");
-	        return "ticket/create"; // Ritorna alla vista del form con il messaggio di errore
+	    // Verifica se l'operatore è attivo
+	    if (!operatore.getStatoPersonale().equalsIgnoreCase("attivo")) {
+	        model.addAttribute("errorMessage", "L'operatore selezionato non è attivo e non può essere assegnato a questo ticket.");
+	        return create(model); // Torna alla vista del form con il messaggio di errore
 	    }
 
-	    // Se tutto è valido, salva il ticket
-	    ticketRepository.save(formTicket);
-
-	    // Redirect alla dashboard o altra pagina
+	    // Se l'operatore è attivo, salva il ticket
+	    ticketRepository.save(ticket);
 	    return "redirect:/admin/dashboard";
 	}
+
 
 				
 // MODIFICA
