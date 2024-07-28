@@ -2,6 +2,7 @@ package it.giacometti.ticket.controller;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +108,8 @@ public class TicketController {
 				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + ticket.getId()));
 
 		existingTicket.setStato(ticket.getStato());
-
+		existingTicket.setCategoria(ticket.getCategoria());
+		
 		ticketRepository.save(existingTicket);
 		
 		//Redirect alla dashboard in base al ruolo dell'utente loggato
