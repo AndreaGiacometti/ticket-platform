@@ -7,38 +7,44 @@
 <body>
     <div class="container mt-4">
         <h1>Crea un Nuovo Ticket</h1>
-        <form th:action="@{/ticket/create}" method="post">
+        
+         <!-- Visualizza un messaggio di errore se presente -->
+    <div th:if="${errorMessage != null}" class="alert alert-danger">
+        <p th:text="${errorMessage}"></p>
+    </div>
+    
+        <form id="create-new-ticket" th:action="@{/ticket/create}" th:object=${ticket} method="post">
             <div class="form-group">
                 <label for="titolo">Titolo</label>
-                <input type="text" class="form-control" id="titolo" name="titolo" required>
+                <input type="text" class="form-control" id="titolo" th:field=*{titolo} required>
             </div>
+            
             <div class="form-group">
                 <label for="descrizione">Descrizione</label>
-                <textarea class="form-control" id="descrizione" name="descrizione" rows="3" required></textarea>
+                <textarea class="form-control" id="descrizione" th:field=*{descrizione} rows="3" required></textarea>
             </div>
-            <div class="form-group">
-                <label for="stato">Stato</label>
-                <select class="form-control" id="stato" name="stato" required>
-                    <option value="" disabled selected>Seleziona uno stato</option>
-                    <option value="da fare">Da fare</option>
-                    <option value="in corso">In corso</option>
-                    <option value="completato">Completato</option>
-                </select>
-            </div>
+            
             <div class="form-group">
                 <label for="operatore">Operatore</label>
-                <select class="form-control" id="operatore" name="operatore.id" required>
+                <select class="form-control" id="operatore" th:field=*{user} required>
                     <option value="" disabled selected>Seleziona un operatore</option>
                     <option th:each="operatore : ${operatori}" th:value="${operatore.id}" th:text="${operatore.nome} + ' ' + ${operatore.cognome}"></option>
                 </select>
-            </div>
+            </div>     
+            
+             <div class="form-group">
+                <label for="stato">Stato</label>
+                <textarea class="form-control" id="stato" th:field=*{stato} rows="3" required></textarea>
+            </div>      
+            
             <div class="form-group">
                 <label for="categoria">Categoria</label>
-                <select class="form-control" id="categoria" name="categoria.id" required>
+                <select class="form-control" id="categoria" th:field=*{categoria} required>
                     <option value="" disabled selected>Seleziona una categoria</option>
                     <option th:each="categoria : ${categorie}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>
                 </select>
             </div>
+            
             <button type="submit" class="btn btn-primary">Crea Ticket</button>
          <a href="#" class="btn btn-secondary" onclick="history.back()">
                 <i class="bi bi-arrow-left"></i> Annulla

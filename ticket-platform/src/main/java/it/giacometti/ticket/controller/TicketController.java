@@ -48,6 +48,7 @@ public class TicketController {
 	@GetMapping("/create")
 	public String createTicketForm(Model model) {
 		model.addAttribute("ticket", new Ticket());
+		
 		// Aggiungi la lista degli operatori al modello
 		List<User> operatori = operatoreRepository.findAll();
 		model.addAttribute("operatori", operatori);
@@ -60,25 +61,35 @@ public class TicketController {
 	}
 
 	@PostMapping("/create")
-	public String createTicket(@ModelAttribute Ticket ticket) {
-		ticketRepository.save(ticket);
-		return "redirect:/admin/dashboard";
+	public String createTicket(@ModelAttribute Ticket ticket, Model model) {
+	    // Recupera l'operatore associato al ticket
+	    User operatore = operatoreRepository.findById(ticket.getUser().getId())
+	            .orElseThrow(() -> new IllegalArgumentException("Operatore non trovato"));
+
+	    // Verifica se l'operatore è attivo
+	    if (!operatore.getStatoPersonale().equalsIgnoreCase("attivo")) {
+	        model.addAttribute("errorMessage", "L'operatore selezionato non è attivo e non può essere assegnato a questo ticket.");
+	        return createTicketForm(model); // Torna alla vista del form con il messaggio di errore
+	    }
+
+	    // Se l'operatore è attivo, salva il ticket
+	    ticketRepository.save(ticket);
+	    return "redirect:/admin/dashboard";
 	}
 
 	// Modifica del Ticket
+	
 	@GetMapping("/edit/{id}")
 	public String editTicketForm(@PathVariable int id, Model model) {
-		Ticket ticket = ticketRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + id));
 		
-		model.addAttribute("ticket", ticket);
+		model.addAttribute("ticket", ticketRepository.findById(id).get());
 		
 		List<String> statuses = Arrays.asList("da fare", "in corso", "completato");
 		model.addAttribute("statuses", statuses);
 		
-		// Aggiungi la lista delle categorie al modello
-				List<Categoria> categorie = categoriaRepository.findAll();
-				model.addAttribute("categorie", categorie);
+		List<Categoria> categorie = categoriaRepository.findAll();
+		model.addAttribute("categorie", categorie);
+		
 		return "ticket/editTicket";
 	}
 

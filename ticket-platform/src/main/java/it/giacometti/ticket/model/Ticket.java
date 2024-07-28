@@ -27,7 +27,7 @@ public class Ticket {
     private String descrizione;
     
     @NotBlank
-    private String stato;
+    private String stato = "da fare";
     
     private LocalDate dataCreazione;
     
