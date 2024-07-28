@@ -3,8 +3,7 @@ package it.giacometti.ticket.controller;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
@@ -35,18 +34,20 @@ public class TicketController {
 	@Autowired
 	private UserRepository operatoreRepository;
 
-	// Dettaglio del Ticket
+// VISUALIZZA
+	
 	@GetMapping("/{id}")
-	public String viewTicket(@PathVariable int id, Model model) {
+	public String show(@PathVariable int id, Model model) {
 		Ticket ticket = ticketRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + id));
 		model.addAttribute("ticket", ticket);
 		return "ticket/viewTicket";
 	}
 
-	// Creazione di un nuovo Ticket
+// CREA
+	
 	@GetMapping("/create")
-	public String createTicketForm(Model model) {
+	public String create(Model model) {
 		model.addAttribute("ticket", new Ticket());
 		
 		// Aggiungi la lista degli operatori al modello
@@ -61,7 +62,8 @@ public class TicketController {
 	}
 
 	@PostMapping("/create")
-	public String createTicket(@ModelAttribute Ticket ticket, Model model) {
+	public String store(@ModelAttribute Ticket ticket, Model model) {
+		
 	    // Recupera l'operatore associato al ticket
 	    User operatore = operatoreRepository.findById(ticket.getUser().getId())
 	            .orElseThrow(() -> new IllegalArgumentException("Operatore non trovato"));
@@ -69,18 +71,18 @@ public class TicketController {
 	    // Verifica se l'operatore è attivo
 	    if (!operatore.getStatoPersonale().equalsIgnoreCase("attivo")) {
 	        model.addAttribute("errorMessage", "L'operatore selezionato non è attivo e non può essere assegnato a questo ticket.");
-	        return createTicketForm(model); // Torna alla vista del form con il messaggio di errore
+	        return create(model); // Torna alla vista del form con il messaggio di errore
 	    }
 
 	    // Se l'operatore è attivo, salva il ticket
 	    ticketRepository.save(ticket);
-	    return "redirect:/admin/dashboard";
+	    return "admin/dashboard";
 	}
 
-	// Modifica del Ticket
+// MODIFICA
 	
 	@GetMapping("/edit/{id}")
-	public String editTicketForm(@PathVariable int id, Model model) {
+	public String edit(@PathVariable int id, Model model) {
 		
 		model.addAttribute("ticket", ticketRepository.findById(id).get());
 		
@@ -94,30 +96,29 @@ public class TicketController {
 	}
 
 	@PostMapping("/edit")
-	public String updateNota(@ModelAttribute Ticket ticket) {
+	public String store(@ModelAttribute Ticket ticket) {
+	 	
 		Ticket existingTicket = ticketRepository.findById(ticket.getId())
 				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + ticket.getId()));
+		
 		existingTicket.setStato(ticket.getStato());
+		existingTicket.setCategoria(ticket.getCategoria());
 		
 		ticketRepository.save(existingTicket);
 		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"))) {
-			return "redirect:/admin/dashboard";
-		} else if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_OPERATORE"))) {
-			return "redirect:/operatore/dashboard";
-		}
-		return "redirect:/error";
+		return "/admin/dashboard";
 	}
 
-	// Eliminazione del Ticket
+// ELIMINA
+	
 	@PostMapping("/delete/{id}")
-	public String deleteTicket(@PathVariable int id) {
+	public String delete(@PathVariable int id) {
 		ticketRepository.deleteById(id);
-		return "redirect:/admin/dashboard";
+		return "redirect:admin/dashboard";
 	}
 
+// SEARCHBAR
+	
 	@GetMapping("/search")
 	public String searchTickets(@RequestParam("keyword") String keyword, Model model) {
 		List<Ticket> tickets;

@@ -30,12 +30,7 @@
                     <option value="" disabled selected>Seleziona un operatore</option>
                     <option th:each="operatore : ${operatori}" th:value="${operatore.id}" th:text="${operatore.nome} + ' ' + ${operatore.cognome}"></option>
                 </select>
-            </div>     
-            
-             <div class="form-group">
-                <label for="stato">Stato</label>
-                <textarea class="form-control" id="stato" th:field=*{stato} rows="3" required></textarea>
-            </div>      
+            </div>  
             
             <div class="form-group">
                 <label for="categoria">Categoria</label>
