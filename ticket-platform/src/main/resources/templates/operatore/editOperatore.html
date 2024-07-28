@@ -12,6 +12,7 @@
 <body>
 	<div class="container mt-5">
 		<h2 class="text-center mb-4">Modifica Utente</h2>
+		<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 		<form th:action="@{/operatore/updateStatus}" th:object="${user}"
 			method="post" class="needs-validation" novalidate>
 			<input type="hidden" th:field="*{id}" />
@@ -27,21 +28,21 @@
 			</div>
 
 
-			
 
 
-				<div class="form-group">
-					<label for="email">Email:</label>
-					<div class="input-group">
-						<input type="text" th:field="*{email}" id="email"
-							th:value="${#strings.substring(user.email, 0, user.email.indexOf('@'))}"
-							class="form-control" required />
-						<div class="input-group-append">
-							<span class="input-group-text">@ticketfacile.it</span>
-						</div>
+
+			<div class="form-group">
+				<label for="email">Email:</label>
+				<div class="input-group">
+					<input type="text" th:field="*{email}" id="email"
+						th:value="${#strings.substring(user.email, 0, user.email.indexOf('@'))}"
+						class="form-control" required />
+					<div class="input-group-append">
+						<span class="input-group-text">@ticketfacile.it</span>
 					</div>
-					<div class="invalid-feedback">Inserisci un'email valida.</div>
-				
+				</div>
+				<div class="invalid-feedback">Inserisci un'email valida.</div>
+
 
 				<div class="invalid-feedback">Inserisci un'email valida.</div>
 			</div>
@@ -53,8 +54,16 @@
 					<option value="non attivo">Non Attivo</option>
 				</select>
 			</div>
-			<button type="submit" class="btn btn-primary btn-block">Salva
-				Modifiche</button>
+
+
+			<button type="submit" class="btn btn-primary">
+				<i class="bi bi-save"></i>Salva Modifiche
+			</button>
+
+			<a href="/operatore/dashboard" class="btn btn-secondary"
+				sec:authorize="hasAuthority('OPERATORE')"> <i
+				class="bi bi-arrow-left"></i> Torna alla Dashboard
+			</a>
 		</form>
 	</div>
 

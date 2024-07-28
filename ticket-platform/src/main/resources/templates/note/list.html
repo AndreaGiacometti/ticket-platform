@@ -57,27 +57,27 @@
 				</div>
 			</div>
 		</div>
-		</div>
+	</div>
 
-		<div th:if="${note == null || note.isEmpty()}">
-			<p>Non ci sono note per questo ticket. Aggiungi una nuova nota.</p>
-		</div>
+	<div class="container" th:if="${note == null || note.isEmpty()}">
+		<h4>Non ci sono note per questo ticket. Aggiungi una nuova nota.</h4>
+	</div>
 
-		<div class="text-center mt-4">
-			<a class="btn btn-primary"
-				th:href="@{/note/create/{ticketId}(ticketId=${ticketId})}"> <i
-				class="bi bi-plus-circle"></i> Crea Nota
-			</a> <a href="/admin/dashboard" class="btn btn-secondary"
-				sec:authorize="hasAuthority('ADMIN')"> <i
-				class="bi bi-arrow-left"></i> Torna alla Dashboard
-			</a> <a href="/operatore/dashboard" class="btn btn-secondary"
-				sec:authorize="hasAuthority('OPERATORE')"> <i
-				class="bi bi-arrow-left"></i> Torna alla Dashboard
-			</a>
+	<div class="container mt-4">
+		<a class="btn btn-primary"
+			th:href="@{/note/create/{ticketId}(ticketId=${ticketId})}"> <i
+			class="bi bi-plus-circle"></i> Crea Nota
+		</a> <a href="/admin/dashboard" class="btn btn-secondary"
+			sec:authorize="hasAuthority('ADMIN')"> <i
+			class="bi bi-arrow-left"></i> Torna alla Dashboard
+		</a> <a href="/operatore/dashboard" class="btn btn-secondary"
+			sec:authorize="hasAuthority('OPERATORE')"> <i
+			class="bi bi-arrow-left"></i> Torna alla Dashboard
+		</a>
 
-		</div>
+	</div>
 
-		<script
+	<script
 			src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 		<script
 			src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>

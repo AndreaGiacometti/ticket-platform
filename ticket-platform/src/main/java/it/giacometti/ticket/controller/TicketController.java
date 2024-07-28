@@ -3,8 +3,10 @@ package it.giacometti.ticket.controller;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import it.giacometti.ticket.model.Categoria;
+import it.giacometti.ticket.model.Nota;
 import it.giacometti.ticket.model.User;
 import it.giacometti.ticket.model.Ticket;
 import it.giacometti.ticket.repository.CategoriaRepository;
@@ -77,9 +80,21 @@ public class TicketController {
 	}
 
 	@PostMapping("/edit")
-	public String updateTicket(@ModelAttribute Ticket ticket) {
-		ticketRepository.save(ticket);
-		return "redirect:/admin/dashboard";
+	public String updateNota(@ModelAttribute Ticket ticket) {
+		Ticket existingTicket = ticketRepository.findById(ticket.getId())
+				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + ticket.getId()));
+		existingTicket.setStato(ticket.getStato());
+		ticketRepository.save(existingTicket);
+		// Ottieni l'autenticazione corrente
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		// Controlla i ruoli dell'utente autenticato
+		if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"))) {
+			return "redirect:/admin/dashboard";
+		} else if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_OPERATORE"))) {
+			return "redirect:/operatore/dashboard";
+		}
+		return "redirect:/error";
 	}
 
 	// Eliminazione del Ticket
@@ -88,16 +103,16 @@ public class TicketController {
 		ticketRepository.deleteById(id);
 		return "redirect:/admin/dashboard";
 	}
-	
+
 	@GetMapping("/search")
 	public String searchTickets(@RequestParam("keyword") String keyword, Model model) {
-	    List<Ticket> tickets;
-	    if (keyword != null && !keyword.isEmpty()) {
-	        tickets = ticketRepository.findByTitoloContainingOrDescrizioneContaining(keyword, keyword);
-	    } else {
-	        tickets = ticketRepository.findAll();
-	    }
-	    model.addAttribute("tickets", tickets);
-	    return "admin/dashboard";
+		List<Ticket> tickets;
+		if (keyword != null && !keyword.isEmpty()) {
+			tickets = ticketRepository.findByTitoloContainingOrDescrizioneContaining(keyword, keyword);
+		} else {
+			tickets = ticketRepository.findAll();
+		}
+		model.addAttribute("tickets", tickets);
+		return "admin/dashboard";
 	}
 }

@@ -1,95 +1,70 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Modifica Ticket</title>
-<link
-	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
-	rel="stylesheet">
-<link
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-	rel="stylesheet">
-<style>
-.card-header {
-	background-color: #007bff;
-	color: white;
-}
-
-.form-group label {
-	font-weight: bold;
-}
-
-.btn-primary {
-	background-color: #007bff;
-	border: none;
-}
-
-.btn-primary:hover {
-	background-color: #0056b3;
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifica Ticket</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
 </head>
 <body>
-	<div class="container mt-4">
-	<h1 class="mb-4">Modifica Ticket</h1>
-		<!-- Modifica Ticket Form -->
-		<div class="card">
-			<div class="card-header">
-			</div>
-			<div class="card-body">
-				<form th:action="@{/ticket/edit}" method="post">
-					<input type="hidden" name="id" th:value="${ticket.id}">
+    <div class="container mt-4">
+        <h1 class="mb-4">Modifica Ticket</h1>
+        <!-- Modifica Ticket Form -->
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Dettagli Ticket</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/ticket/edit}" method="post">
+                    <input type="hidden" name="id" th:value="${ticket.id}">
 
-					<div class="mb-3">
-						<label for="titolo" class="form-label">Titolo</label> <input
-							type="text" id="titolo" name="titolo" class="form-control"
-							th:value="${ticket.titolo}" readonly>
-					</div>
+                   <div class="mb-3">
+                        <label for="titolo" class="form-label">Titolo</label>
+                        <input type="text" id="titolo" name="titolo" class="form-control" th:value="${ticket.titolo}" readonly>
+                    </div>
 
-					<div class="mb-3">
-						<label for="descrizione" class="form-label">Descrizione</label>
-						<textarea id="descrizione" name="descrizione" class="form-control"
-							rows="4" readonly th:text="${ticket.descrizione}"></textarea>
-					</div>
+                    <div class="mb-3">
+                        <label for="descrizione" class="form-label">Descrizione</label>
+                        <textarea id="descrizione" name="descrizione" class="form-control" rows="4" readonly th:text="${ticket.descrizione}"></textarea>
+                    </div>
 
-					<div class="mb-3">
-						<label for="stato" class="form-label">Stato</label> 
-						<select id="stato" name="stato" class="form-select">
-							<option th:each="status : ${statuses}" 
-									th:value="${status}"
-									th:text="${status}" 
-									th:selected="${status == ticket.stato}">
-							</option>
-						</select>
-					</div>
+                    <div class="mb-3">
+                        <label for="stato" class="form-label">Stato</label>
+                        <select id="stato" name="stato" class="form-select">
+                            <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}" th:selected="${status == ticket.stato}"></option>
+                        </select>
+                    </div>
 
-					<div class="mb-3">
-						<label for="categoria" class="form-label">Categoria</label> <select
-							id="categoria" name="categoria.id" class="form-select">
-							<option th:each="cat : ${categories}" th:value="${cat.id}"
-								th:text="${cat.nome}"
-								th:selected="${cat.id == ticket.categoria.id}"></option>
-						</select>
+                    <div class="mb-3" th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
+                        <label for="categoria" class="form-label">Categoria</label>
+                        <select id="categoria" th:field="*{categoria}" name="categoria.id" class="form-select">
+                            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.nome}" th:selected="${cat.id == ticket.categoria.id}"></option>
+                        </select>
+                    </div>
 
-					</div>
+                    <div class="text-center mt-4"> 
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save"></i> Modifica Ticket
+                        </button>
+                        
+                        <a href="/admin/dashboard" class="btn btn-secondary" sec:authorize="hasAuthority('ADMIN')">
+                            <i class="bi bi-arrow-left"></i> Torna alla Dashboard
+                        </a>
+                        
+                        <a href="/operatore/dashboard" class="btn btn-secondary" sec:authorize="hasAuthority('OPERATORE')">
+                            <i class="bi bi-arrow-left"></i> Torna alla Dashboard
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-					<div class="text-center mt-4">
-						<button type="submit" class="btn btn-primary mr-3">
-							<i class="bi bi-save"></i> Modifica Ticket
-						</button>
-						<a href="/admin/dashboard" class="btn btn-secondary"> Annulla
-						</a>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-
-	<script
-		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 </body>
 </html>
-

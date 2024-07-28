@@ -4,7 +4,6 @@ import it.giacometti.ticket.model.Ticket;
 import it.giacometti.ticket.model.User;
 import it.giacometti.ticket.repository.TicketRepository;
 import it.giacometti.ticket.repository.UserRepository;
-import it.giacometti.ticket.security.DatabaseUserDetails;
 
 import java.util.List;
 
@@ -59,6 +58,20 @@ public class OperatoreController {
 
 		// Trova l'utente nel database usando l'email attuale
 		User user = userRepository.findByEmail(currentEmail).orElseThrow(() -> new RuntimeException("User not found"));
+		
+		 if ("non attivo".equalsIgnoreCase(statoPersonale)) {
+		        // Controlla se l'operatore ha ticket assegnati con stato "DA FARE" o "IN CORSO"
+		        List<Ticket> assignedTickets = ticketRepository.findByUserId(user.getId());
+		        boolean hasActiveTickets = assignedTickets.stream()
+		            .anyMatch(ticket -> "DA FARE".equalsIgnoreCase(ticket.getStato()) ||
+		                                "IN CORSO".equalsIgnoreCase(ticket.getStato()));
+
+		        if (hasActiveTickets) {
+		            model.addAttribute("error", "Non è possibile impostare lo stato su 'Non Attivo' mentre ci sono ticket attivi.");
+		            model.addAttribute("user", user);
+		            return "operatore/editOperatore"; // Ritorna alla pagina di modifica con l'errore
+		        }
+		    }
 
 		// Aggiorna i dettagli dell'utente con i nuovi valori
 		user.setNome(nome);

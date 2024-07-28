@@ -77,26 +77,43 @@
 							<tr>
 								<th>Titolo</th>
 								<th>Descrizione</th>
-								<th>Stato</th>
-								<th>Visualizza Dettaglio Ticket</th>
-								<th>Aggiungi Nota</th>
+								<th class="text-center vertical-align-center">Stato</th>
+								<th class="text-center vertical-align-center">Visualizza Dettaglio</th>
+								<th class="text-center vertical-align-center">Modifica</th>
+								<th class="text-center vertical-align-center">Aggiungi Nota</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="ticket : ${tickets}">
 								<td th:text="${ticket.titolo}"></td>
 								<td th:text="${ticket.descrizione}"></td>
-								<td th:text="${ticket.stato}"></td>
-								<td><a th:href="@{/ticket/{id}(id=${ticket.id})}"
-									class="btn btn-info btn-sm" title="Visualizza Dettaglio Ticket">
-										<i class="bi bi-eye"></i>
-								</a></td>
-								<td><a
-									th:href="@{/note/ticket/{ticketId}(ticketId=${ticket.id})}"
+								<td class="text-center" th:text="${ticket.stato}"></td>
+								<td>
+									<div class="d-flex justify-content-center align-items-center">
+										<a th:href="@{/ticket/{id}(id=${ticket.id})}"
+											class="btn btn-info btn-sm"
+											title="Visualizza Dettaglio Ticket"> <i class="bi bi-eye"></i>
+										</a>
+									</div>
+								</td>
+								<td>
+									<div class="d-flex justify-content-center align-items-center">
+										<a th:href="@{/ticket/edit/{id}(id=${ticket.id})}"
+											class="btn btn-warning btn-sm" 
+											title="Modifica Ticket"> 
+											<i class="bi bi-pencil"></i>
+										</a>
+									</div>
+								</td>
+								<td>
+								<div class="d-flex justify-content-center align-items-center">
+								<a th:href="@{/note/ticket/{ticketId}(ticketId=${ticket.id})}"
 									class="btn btn-secondary btn-sm"
-									title="Visualizza o Aggiungi Nota"> <i
-										class="bi bi-file-earmark-plus"></i>
-								</a></td>
+									title="Visualizza o Aggiungi Nota"> 
+									<i class="bi bi-file-earmark-plus"></i>
+								</a>
+								</div>
+								</td>
 							</tr>
 						</tbody>
 					</table>
