@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import it.giacometti.ticket.model.Categoria;
 import it.giacometti.ticket.model.User;
@@ -113,7 +114,6 @@ public class TicketController {
 				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + ticket.getId()));
 
 		existingTicket.setStato(ticket.getStato());
-		existingTicket.setCategoria(ticket.getCategoria());
 
 		ticketRepository.save(existingTicket);
 		
@@ -154,4 +154,22 @@ public class TicketController {
 	    model.addAttribute("tickets", tickets);
 	    return "ticket/searchResults"; // Nome del template per visualizzare i risultati
 	}
+	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
