@@ -23,18 +23,23 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 public class SecurityConfiguration {
 
-	@Bean
-     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests()
-		.requestMatchers("/operatore/**").hasAnyAuthority("OPERATORE", "ADMIN")
-		.requestMatchers("/admin/**").hasAuthority("ADMIN")
-		.requestMatchers("/**").permitAll()
-		.and().formLogin()
-		.and().logout();
-     
-		return http.build();
-     }
+	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+	    http.authorizeHttpRequests()
+	        .requestMatchers("/operatore/**").hasAnyAuthority("OPERATORE", "ADMIN")
+	        .requestMatchers("/admin/**").hasAuthority("ADMIN")
+	        .requestMatchers("/**").permitAll()
+	        .and()
+	        .formLogin()
+	        .loginPage("/login")
+	        .successHandler(new CustomAuthenticationSuccessHandler()) // Usa il custom success handler
+	        .and()
+	        .logout()
+	        .logoutUrl("/logout")
+	        .logoutSuccessUrl("/login?logout");
 
+	    return http.build();
+	}
+	
 	@Bean
 	UserDetailsService userDetailsService() {
 		return new DatabaseUserDetailsService();
@@ -51,5 +56,6 @@ public class SecurityConfiguration {
 		authProvider.setUserDetailsService(userDetailsService());
 		authProvider.setPasswordEncoder(passwordEncoder());
 		return authProvider;
-	}
+	}	
+	
 }

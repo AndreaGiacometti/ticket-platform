@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Modifica Utente</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<!-- Bootstrap CSS -->
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body>
+	<div class="container mt-5">
+		<h2 class="text-center mb-4">Modifica Utente</h2>
+		<form th:action="@{/operatore/updateStatus}" th:object="${user}"
+			method="post" class="needs-validation" novalidate>
+			<input type="hidden" th:field="*{id}" />
+			<div class="form-group">
+				<label for="nome">Nome:</label> <input type="text" id="nome"
+					th:field="*{nome}" class="form-control" required />
+				<div class="invalid-feedback">Inserisci il nome.</div>
+			</div>
+			<div class="form-group">
+				<label for="cognome">Cognome:</label> <input type="text"
+					id="cognome" th:field="*{cognome}" class="form-control" required />
+				<div class="invalid-feedback">Inserisci il cognome.</div>
+			</div>
+
+
+			
+
+
+				<div class="form-group">
+					<label for="email">Email:</label>
+					<div class="input-group">
+						<input type="text" th:field="*{email}" id="email"
+							th:value="${#strings.substring(user.email, 0, user.email.indexOf('@'))}"
+							class="form-control" required />
+						<div class="input-group-append">
+							<span class="input-group-text">@ticketfacile.it</span>
+						</div>
+					</div>
+					<div class="invalid-feedback">Inserisci un'email valida.</div>
+				
+
+				<div class="invalid-feedback">Inserisci un'email valida.</div>
+			</div>
+			<div class="form-group">
+				<label for="statoPersonale">Stato:</label> <select
+					id="statoPersonale" th:field="*{statoPersonale}"
+					class="form-control">
+					<option value="attivo">Attivo</option>
+					<option value="non attivo">Non Attivo</option>
+				</select>
+			</div>
+			<button type="submit" class="btn btn-primary btn-block">Salva
+				Modifiche</button>
+		</form>
+	</div>
+
+	<!-- Bootstrap JS and dependencies -->
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

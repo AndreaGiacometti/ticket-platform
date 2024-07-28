@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,6 +39,10 @@ public class DatabaseUserDetails implements UserDetails {
 		
 	}
 	
+	  @Bean
+	  CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+	        return new CustomAuthenticationSuccessHandler();
+	    }
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

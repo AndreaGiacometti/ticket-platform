@@ -29,33 +29,34 @@
 							<strong>Testo:</strong> <span th:text="${nota.testo}"></span>
 						</p>
 					</div>
-				<div class="card-footer">
-				<div>
-						<small class="text-muted">Creata il <span
-							th:text="${nota.dataCreazione}"></span></small>
-					</div>
-					<div>		
+					<div class="card-footer">
+						<div>
+							<small class="text-muted">Creata il <span
+								th:text="${nota.dataCreazione}"></span></small>
+						</div>
+						<div>
 							<small class="text-muted">Modificata il <span
-							th:text="${nota.dataModifica}"></span></small>
-							</div>
-		<div class="d-inline-block my-2">
-    <a th:href="@{/note/edit/{id}(id=${nota.id})}"
-       class="btn btn-warning btn-sm mt-2 d-inline-flex align-items-center mr-2">
-        <i class="bi bi-pencil"></i>
-        <span class="ms-1">Modifica</span>
-    </a>
-</div>
-<div class="d-inline-block">
-    <form th:action="@{/note/delete/{id}(id=${nota.id})}" method="post" style="display: inline;">
-        <button type="submit" class="btn btn-danger btn-sm mt-2 d-inline-flex align-items-center">
-            <i class="bi bi-trash"></i>
-            <span class="ms-1">Elimina</span>
-        </button>
-    </form>
-</div>
+								th:text="${nota.dataModifica}"></span></small>
+						</div>
+						<div class="d-inline-block my-2">
+							<a th:href="@{/note/edit/{id}(id=${nota.id})}"
+								class="btn btn-warning btn-sm mt-2 d-inline-flex align-items-center mr-2">
+								<i class="bi bi-pencil"></i> <span class="ms-1">Modifica</span>
+							</a>
+						</div>
+						<div class="d-inline-block">
+							<form th:action="@{/note/delete/{id}(id=${nota.id})}"
+								method="post" style="display: inline;">
+								<button type="submit"
+									class="btn btn-danger btn-sm mt-2 d-inline-flex align-items-center">
+									<i class="bi bi-trash"></i> <span class="ms-1">Elimina</span>
+								</button>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>
+		</div>
 		</div>
 
 		<div th:if="${note == null || note.isEmpty()}">
@@ -64,8 +65,8 @@
 
 		<div class="text-center mt-4">
 			<a class="btn btn-primary"
-				th:href="@{/note/create/{ticketId}(ticketId=${ticketId})}">
-				<i class="bi bi-plus-circle"></i> Crea Nota
+				th:href="@{/note/create/{ticketId}(ticketId=${ticketId})}"> <i
+				class="bi bi-plus-circle"></i> Crea Nota
 			</a> <a href="/admin/dashboard" class="btn btn-secondary"
 				sec:authorize="hasAuthority('ADMIN')"> <i
 				class="bi bi-arrow-left"></i> Torna alla Dashboard
