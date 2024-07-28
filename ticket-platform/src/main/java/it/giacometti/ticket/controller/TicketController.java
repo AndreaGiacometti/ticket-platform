@@ -65,31 +65,31 @@ public class TicketController {
 	}
 
 	@PostMapping("/ticket/create")
-	public String store(@Valid @ModelAttribute ("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
-		if(bindingResult.hasErrors()) {
-		return "/ticket/create";
-		}
-		ticketRepository.save(formTicket);
-		return "redirect:/admin/dashboard";
-		}
-		/*Recupera l'operatore associato al ticket
-		User operatore = userRepository.findById(ticket.getUser().getId())
-				.orElseThrow(() -> new IllegalArgumentException("Operatore non trovato"));
+	public String store(@Valid @ModelAttribute("ticket") Ticket formTicket, 
+	                    BindingResult bindingResult, 
+	                    Model model) {
+	    // Verifica se ci sono errori di validazione del ticket
+	    if (bindingResult.hasErrors()) {
+	        return "ticket/create"; // Ritorna alla vista del form con gli errori di validazione
+	    }
+	    
+	    User user = userRepository.findById(formTicket.getUser().getId())
+	            .orElse(null);
 
-		// Verifica se l'operatore è attivo
-		if (!operatore.getStatoPersonale().equalsIgnoreCase("attivo")) {
-			model.addAttribute("errorMessage",
-					"L'operatore selezionato non è attivo e non può essere assegnato a questo ticket.");
-			return create(model); // Torna alla vista del form con il messaggio di errore
-		}
-		
-		
+	    if (user == null || !"attivo".equalsIgnoreCase(user.getStatoPersonale())) {
+	        model.addAttribute("errorMessage", "L'operatore selezionato non è attivo.");
+	        System.out.println("Errore: L'operatore selezionato non è attivo.");
+	        return "ticket/create"; // Ritorna alla vista del form con il messaggio di errore
+	    }
 
-		// Se l'operatore è attivo, salva il ticket
-		ticketRepository.save(ticket);
-		return "redirect:/admin/dashboard";
+	    // Se tutto è valido, salva il ticket
+	    ticketRepository.save(formTicket);
+
+	    // Redirect alla dashboard o altra pagina
+	    return "redirect:/admin/dashboard";
 	}
-*/
+
+				
 // MODIFICA
 
 	@GetMapping("/ticket/edit/{id}")
@@ -145,13 +145,13 @@ public class TicketController {
 
 	@GetMapping("/ticket/search")
 	public String searchTickets(@RequestParam("keyword") String keyword, Model model) {
-		List<Ticket> tickets;
-		if (keyword != null && !keyword.isEmpty()) {
-			tickets = ticketRepository.findByTitoloContainingOrDescrizioneContaining(keyword, keyword);
-		} else {
-			tickets = ticketRepository.findAll();
-		}
-		model.addAttribute("tickets", tickets);
-		return "redirect:/admin/dashboard";
+	    List<Ticket> tickets;
+	    if (keyword != null && !keyword.isEmpty()) {
+	        tickets = ticketRepository.findByTitoloContainingOrDescrizioneContaining(keyword, keyword);
+	    } else {
+	        tickets = ticketRepository.findAll();
+	    }
+	    model.addAttribute("tickets", tickets);
+	    return "ticket/searchResults"; // Nome del template per visualizzare i risultati
 	}
 }

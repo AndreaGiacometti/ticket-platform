@@ -10,9 +10,7 @@
 		<h1>Crea un Nuovo Ticket</h1>
 
 		<!-- MESSAGGIO DI ERRORE SE L'OPERATORE NON E' ATTIVO -->
-		<div th:if="${errorMessage != null}" class="alert alert-danger">
-			<p th:text="${errorMessage}"></p>
-		</div>
+		 <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
 
 		<form id="create-new-ticket" th:action="@{/ticket/create}"
 			th:object=${ticket} method="post">
