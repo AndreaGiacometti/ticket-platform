@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import it.giacometti.ticket.model.Categoria;
-import it.giacometti.ticket.model.Nota;
 import it.giacometti.ticket.model.User;
 import it.giacometti.ticket.model.Ticket;
 import it.giacometti.ticket.repository.CategoriaRepository;
@@ -71,9 +70,12 @@ public class TicketController {
 	public String editTicketForm(@PathVariable int id, Model model) {
 		Ticket ticket = ticketRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + id));
+		
 		model.addAttribute("ticket", ticket);
+		
 		List<String> statuses = Arrays.asList("da fare", "in corso", "completato");
 		model.addAttribute("statuses", statuses);
+		
 		List<Categoria> categories = categoriaRepository.findAll();
 		model.addAttribute("categories", categories);
 		return "ticket/editTicket";
@@ -84,11 +86,11 @@ public class TicketController {
 		Ticket existingTicket = ticketRepository.findById(ticket.getId())
 				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + ticket.getId()));
 		existingTicket.setStato(ticket.getStato());
+		
 		ticketRepository.save(existingTicket);
-		// Ottieni l'autenticazione corrente
+		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-		// Controlla i ruoli dell'utente autenticato
 		if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"))) {
 			return "redirect:/admin/dashboard";
 		} else if (authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ROLE_OPERATORE"))) {
