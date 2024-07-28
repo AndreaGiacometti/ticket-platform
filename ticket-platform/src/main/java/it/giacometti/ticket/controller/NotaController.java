@@ -108,8 +108,8 @@ public class NotaController {
 		existingNota.setAutore(nota.getAutore());
 		existingNota.setTesto(nota.getTesto());
 		
-		// Non modificare dataCreazione
 		notaRepository.save(existingNota);
+		
 		return "redirect:/note/ticket/" + existingNota.getTicket().getId(); // Ritorna alla lista delle note del ticket
 	}
 

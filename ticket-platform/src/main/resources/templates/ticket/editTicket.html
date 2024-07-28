@@ -38,15 +38,15 @@
 					</div>
 
 					<div class="mb-3">
-						<label for="stato">Stato</label> 
+						<label for="stato" class="d-block">Stato</label> 
 						<select class="form-select" id="stato" th:field="*{stato}">
 							<option th:each="status : ${statuses}" th:value="${status}"
 								th:text="${status}" th:selected="${status == ticket.stato}"></option>
 						</select>
 					</div>
 
-					<div class="form-group">
-						<label for="categoria">Categoria</label> 
+					<div class="form-group" sec:authorize="hasAuthority('ADMIN')">
+						<label for="categoria" class="d-block">Categoria</label> 
 						<select class="form-select" id="categoria" th:field="*{categoria}">
 							<option value="" disabled selected>Seleziona una categoria</option>
 							<option th:each="categoria : ${categorie}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>

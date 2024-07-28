@@ -19,14 +19,11 @@
 			<div class="card-deck">
 				<div th:each="nota : ${note}" class="card mb-4">
 					<div class="card-body">
-						<h5 class="card-title">
-							Nota #<span th:text="${nota.id}"></span>
-						</h5>
 						<p class="card-text">
 							<strong>Autore:</strong> <span th:text="${nota.autore}"></span>
 						</p>
 						<p class="card-text">
-							<strong>Testo:</strong> <span th:text="${nota.testo}"></span>
+						<span th:text="${nota.testo}"></span>
 						</p>
 					</div>
 					<div class="card-footer">

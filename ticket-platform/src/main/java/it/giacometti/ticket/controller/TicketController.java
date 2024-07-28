@@ -3,10 +3,12 @@ package it.giacometti.ticket.controller;
 import java.util.Arrays;
 import java.util.List;
 
-
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,10 +21,11 @@ import it.giacometti.ticket.model.User;
 import it.giacometti.ticket.model.Ticket;
 import it.giacometti.ticket.repository.CategoriaRepository;
 import it.giacometti.ticket.repository.UserRepository;
+import jakarta.validation.Valid;
 import it.giacometti.ticket.repository.TicketRepository;
 
 @Controller
-@RequestMapping("/ticket")
+@RequestMapping
 public class TicketController {
 
 	@Autowired
@@ -32,11 +35,11 @@ public class TicketController {
 	private CategoriaRepository categoriaRepository;
 
 	@Autowired
-	private UserRepository operatoreRepository;
+	private UserRepository userRepository;
 
 // VISUALIZZA
-	
-	@GetMapping("/{id}")
+
+	@GetMapping("/ticket/{id}")
 	public String show(@PathVariable int id, Model model) {
 		Ticket ticket = ticketRepository.findById(id)
 				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + id));
@@ -45,13 +48,13 @@ public class TicketController {
 	}
 
 // CREA
-	
-	@GetMapping("/create")
+
+	@GetMapping("/ticket/create")
 	public String create(Model model) {
 		model.addAttribute("ticket", new Ticket());
-		
+
 		// Aggiungi la lista degli operatori al modello
-		List<User> operatori = operatoreRepository.findAll();
+		List<User> operatori = userRepository.findAll();
 		model.addAttribute("operatori", operatori);
 
 		// Aggiungi la lista delle categorie al modello
@@ -61,65 +64,86 @@ public class TicketController {
 		return "ticket/createTicket";
 	}
 
-	@PostMapping("/create")
-	public String store(@ModelAttribute Ticket ticket, Model model) {
+	@PostMapping("/ticket/create")
+	public String store(@Valid @ModelAttribute ("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
+		if(bindingResult.hasErrors()) {
+		return "/ticket/create";
+		}
+		ticketRepository.save(formTicket);
+		return "redirect:/admin/dashboard";
+		}
+		/*Recupera l'operatore associato al ticket
+		User operatore = userRepository.findById(ticket.getUser().getId())
+				.orElseThrow(() -> new IllegalArgumentException("Operatore non trovato"));
+
+		// Verifica se l'operatore è attivo
+		if (!operatore.getStatoPersonale().equalsIgnoreCase("attivo")) {
+			model.addAttribute("errorMessage",
+					"L'operatore selezionato non è attivo e non può essere assegnato a questo ticket.");
+			return create(model); // Torna alla vista del form con il messaggio di errore
+		}
 		
-	    // Recupera l'operatore associato al ticket
-	    User operatore = operatoreRepository.findById(ticket.getUser().getId())
-	            .orElseThrow(() -> new IllegalArgumentException("Operatore non trovato"));
+		
 
-	    // Verifica se l'operatore è attivo
-	    if (!operatore.getStatoPersonale().equalsIgnoreCase("attivo")) {
-	        model.addAttribute("errorMessage", "L'operatore selezionato non è attivo e non può essere assegnato a questo ticket.");
-	        return create(model); // Torna alla vista del form con il messaggio di errore
-	    }
-
-	    // Se l'operatore è attivo, salva il ticket
-	    ticketRepository.save(ticket);
-	    return "admin/dashboard";
+		// Se l'operatore è attivo, salva il ticket
+		ticketRepository.save(ticket);
+		return "redirect:/admin/dashboard";
 	}
-
+*/
 // MODIFICA
-	
-	@GetMapping("/edit/{id}")
+
+	@GetMapping("/ticket/edit/{id}")
 	public String edit(@PathVariable int id, Model model) {
-		
+
 		model.addAttribute("ticket", ticketRepository.findById(id).get());
-		
+
 		List<String> statuses = Arrays.asList("da fare", "in corso", "completato");
 		model.addAttribute("statuses", statuses);
-		
+
 		List<Categoria> categorie = categoriaRepository.findAll();
 		model.addAttribute("categorie", categorie);
-		
+
 		return "ticket/editTicket";
 	}
 
-	@PostMapping("/edit")
+	@PostMapping("/ticket/edit")
 	public String store(@ModelAttribute Ticket ticket) {
-	 	
+
 		Ticket existingTicket = ticketRepository.findById(ticket.getId())
 				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + ticket.getId()));
-		
+
 		existingTicket.setStato(ticket.getStato());
 		existingTicket.setCategoria(ticket.getCategoria());
-		
+
 		ticketRepository.save(existingTicket);
 		
-		return "/admin/dashboard";
+		//Redirect alla dashboard in base al ruolo dell'utente loggato
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+		boolean isAdmin = authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ADMIN"));
+		boolean isOperatore = authentication.getAuthorities().stream()
+				.anyMatch(r -> r.getAuthority().equals("OPERATORE"));
+
+		if (isAdmin) {
+			return "redirect:/admin/dashboard";
+		} else if (isOperatore) {
+			return "redirect:/operatore/dashboard";
+		}
+
+		return "redirect:/login";
 	}
 
 // ELIMINA
-	
-	@PostMapping("/delete/{id}")
+
+	@PostMapping("/ticket/delete/{id}")
 	public String delete(@PathVariable int id) {
 		ticketRepository.deleteById(id);
-		return "redirect:admin/dashboard";
+		return "redirect:/admin/dashboard";
 	}
 
 // SEARCHBAR
-	
-	@GetMapping("/search")
+
+	@GetMapping("/ticket/search")
 	public String searchTickets(@RequestParam("keyword") String keyword, Model model) {
 		List<Ticket> tickets;
 		if (keyword != null && !keyword.isEmpty()) {
@@ -128,6 +152,6 @@ public class TicketController {
 			tickets = ticketRepository.findAll();
 		}
 		model.addAttribute("tickets", tickets);
-		return "admin/dashboard";
+		return "redirect:/admin/dashboard";
 	}
 }
