@@ -10,6 +10,17 @@
 <body>
     <div class="container mt-4">
         <h1 class="mb-4">Dashboard Admin</h1>
+        
+        <!-- Campo di ricerca -->
+    <form action="/ticket/search" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="keyword" class="form-control" placeholder="Cerca per titolo o descrizione..." 
+       th:value="${param.keyword}">
+            <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Cerca</button>
+            </div>
+        </div>
+    </form>
 
         <!-- Mostra la lista dei ticket -->
         <div class="card">
