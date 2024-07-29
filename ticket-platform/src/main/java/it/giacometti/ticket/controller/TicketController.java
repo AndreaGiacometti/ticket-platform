@@ -75,6 +75,13 @@ public class TicketController {
 	    }
 		
 	    if(bindingResult.hasErrors()) {
+	    	
+	    	 List<User> operatori = userRepository.findAll();
+	         model.addAttribute("operatori", operatori);
+	         
+	         List<Categoria> categorie = categoriaRepository.findAll();
+	         model.addAttribute("categorie", categorie);
+
 	    	return "ticket/createTicket";
 	    }
 	    
