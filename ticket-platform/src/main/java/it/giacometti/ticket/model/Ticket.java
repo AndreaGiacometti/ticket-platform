@@ -2,6 +2,10 @@ package it.giacometti.ticket.model;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,118 +20,121 @@ import jakarta.validation.constraints.NotBlank;
 @Entity
 public class Ticket {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    
-    @NotBlank
-    private String titolo;
-    
-    @NotBlank
-    private String descrizione;
-    
-    @NotBlank
-    private String stato = "da fare";
-    
-    private LocalDate dataCreazione;
-    
-    private LocalDate dataModifica;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+	@NotBlank
+	private String titolo;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
+	@NotBlank
+	private String descrizione;
 
-    @OneToMany(mappedBy = "ticket")
-    private List<Nota> note;
+	@NotBlank
+	private String stato = "da fare";
 
-    @PrePersist
-    protected void onCreate() {
-        if (dataCreazione == null) {
-            dataCreazione = LocalDate.now();
-        }
-    }
+	private LocalDate dataCreazione;
 
-    @PreUpdate
-    protected void onUpdate() {
-        dataModifica = LocalDate.now();
-    }
-    
-    // Getters and Setters
+	private LocalDate dataModifica;
 
-    public int getId() {
-        return id;
-    }
+	@ManyToOne
+	@JsonBackReference
+	@JoinColumn(name = "user_id")
+	private User user;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+	@ManyToOne
+	@JsonBackReference
+	@JoinColumn(name = "categoria_id")
+	private Categoria categoria;
 
-    public String getTitolo() {
-        return titolo;
-    }
+	@JsonManagedReference
+	@OneToMany(mappedBy = "ticket")
+	private List<Nota> note;
 
-    public void setTitolo(String titolo) {
-        this.titolo = titolo;
-    }
+	@PrePersist
+	protected void onCreate() {
+		if (dataCreazione == null) {
+			dataCreazione = LocalDate.now();
+		}
+	}
 
-    public String getDescrizione() {
-        return descrizione;
-    }
+	@PreUpdate
+	protected void onUpdate() {
+		dataModifica = LocalDate.now();
+	}
 
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
+	// Getters and Setters
 
-    public String getStato() {
-        return stato;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public void setStato(String stato) {
-        this.stato = stato;
-    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-    public LocalDate getDataCreazione() {
-        return dataCreazione;
-    }
+	public String getTitolo() {
+		return titolo;
+	}
 
-    public void setDataCreazione(LocalDate dataCreazione) {
-        this.dataCreazione = dataCreazione;
-    }
+	public void setTitolo(String titolo) {
+		this.titolo = titolo;
+	}
 
-    public LocalDate getDataModifica() {
-        return dataModifica;
-    }
+	public String getDescrizione() {
+		return descrizione;
+	}
 
-    public void setDataModifica(LocalDate dataModifica) {
-        this.dataModifica = dataModifica;
-    }
+	public void setDescrizione(String descrizione) {
+		this.descrizione = descrizione;
+	}
 
-    public User getUser() {
-        return user;
-    }
+	public String getStato() {
+		return stato;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public void setStato(String stato) {
+		this.stato = stato;
+	}
 
-    public Categoria getCategoria() {
-        return categoria;
-    }
+	public LocalDate getDataCreazione() {
+		return dataCreazione;
+	}
 
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
-    }
+	public void setDataCreazione(LocalDate dataCreazione) {
+		this.dataCreazione = dataCreazione;
+	}
 
-    public List<Nota> getNote() {
-        return note;
-    }
+	public LocalDate getDataModifica() {
+		return dataModifica;
+	}
 
-    public void setNote(List<Nota> note) {
-        this.note = note;
-    }
+	public void setDataModifica(LocalDate dataModifica) {
+		this.dataModifica = dataModifica;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Categoria getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(Categoria categoria) {
+		this.categoria = categoria;
+	}
+
+	public List<Nota> getNote() {
+		return note;
+	}
+
+	public void setNote(List<Nota> note) {
+		this.note = note;
+	}
 
 }

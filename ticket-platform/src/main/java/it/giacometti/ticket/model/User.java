@@ -2,6 +2,8 @@ package it.giacometti.ticket.model;
 
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -39,6 +41,7 @@ public class User {
 	private String statoPersonale;
 
 	@ManyToMany(fetch = FetchType.EAGER)
+	@JsonManagedReference
 	private Set<Role> roles;
 
 	// Getters and Setters

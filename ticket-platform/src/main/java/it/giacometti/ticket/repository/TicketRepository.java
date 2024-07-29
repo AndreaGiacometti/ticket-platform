@@ -9,4 +9,6 @@ import it.giacometti.ticket.model.Ticket;
 public interface TicketRepository extends JpaRepository<Ticket, Integer>{
 	  List<Ticket> findByUserId(int userId);
 	  List<Ticket> findByTitoloContainingOrDescrizioneContaining(String titolo, String descrizione);
+	  List<Ticket> findByCategoriaId(int categoriaId);
+	  List<Ticket> findByStato(String stato);
 }

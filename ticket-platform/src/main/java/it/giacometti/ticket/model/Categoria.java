@@ -1,6 +1,9 @@
 package it.giacometti.ticket.model;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +25,7 @@ public class Categoria {
     private String descrizione;
 
     @OneToMany(mappedBy = "categoria")
+    @JsonManagedReference
     private List<Ticket> tickets;
 
     // Getters and Setters
