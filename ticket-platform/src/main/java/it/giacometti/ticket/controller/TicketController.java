@@ -2,21 +2,18 @@ package it.giacometti.ticket.controller;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import it.giacometti.ticket.model.Categoria;
 import it.giacometti.ticket.model.User;
@@ -67,9 +64,9 @@ public class TicketController {
 	}
 
 	@PostMapping("/ticket/create")
-	public String createTicket(@ModelAttribute Ticket ticket, Model model) {
+	public String store(@ModelAttribute ("ticket") Ticket formTicket, Model model) {
 	    // Recupera l'operatore associato al ticket
-	    User operatore = userRepository.findById(ticket.getUser().getId())
+	    User operatore = userRepository.findById(formTicket.getUser().getId())
 	            .orElseThrow(() -> new IllegalArgumentException("Operatore non trovato"));
 
 	    // Verifica se l'operatore è attivo
@@ -79,7 +76,7 @@ public class TicketController {
 	    }
 
 	    // Se l'operatore è attivo, salva il ticket
-	    ticketRepository.save(ticket);
+	    ticketRepository.save(formTicket);
 	    return "redirect:/admin/dashboard";
 	}
 
@@ -102,7 +99,7 @@ public class TicketController {
 	}
 
 	@PostMapping("/ticket/edit")
-	public String store(@ModelAttribute Ticket ticket) {
+	public String store(@ModelAttribute("editTicket") Ticket formTicket, Model model) {
 
 		Ticket existingTicket = ticketRepository.findById(ticket.getId())
 				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + ticket.getId()));
