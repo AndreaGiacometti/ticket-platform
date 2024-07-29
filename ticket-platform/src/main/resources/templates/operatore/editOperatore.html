@@ -20,59 +20,74 @@
 
 			<!-- campo nascosto per l'id operatore -->
 			<input type="hidden" name="id" th:value="${user.id}" />
-			
+
 			<!-- campo nascosto per la password -->
-			<input type="hidden" name="id" th:value="${user.password}" />
+			<input type="hidden" name="password" th:value="${user.password}" />
 
 			<!-- campo per il nome -->
 			<div class="form-group">
 				<label for="nome">Nome:</label> <input type="text" name="nome"
-					th:field="*{nome}" class="form-control" th:value="${nome}"/>
-			</div>
-
-			<!-- campo per il cognome -->
-			<div class="form-group">
-				<label for="cognome">Cognome:</label> <input type="text"
-					name="cognome" th:field="*{cognome}" class="form-control" th:value="${cognome}"/>
-			</div>
-
-			<!-- campo per la mail -->
-			<div class="form-group">
-				<label for="email">Email:</label>
-				<div class="input-group">
-					<input type="text" th:field="*{email}" nome="email"
-						th:value="${#strings.substring(user.email, 0, user.email.indexOf('@'))}"
-						name="email" class="form-control" />
-					<div class="input-group-append">
-						<span class="input-group-text">@ticketfacile.it</span>
-					</div>
+					th:field="*{nome}" class="form-control" th:value="${nome}"
+					th:errorClass="is-invalid" />
+				<div th:if="${#fields.hasErrors('nome')}" class="invalid-field">
+					<ul>
+						<li th:each="err : ${#fields.errors('nome')}" th:text="${err}"></li>
+					</ul>
 				</div>
-			</div>
-			
-			<!-- campo per lo stato personale -->
-			<div class="form-group">
-				<label for="statoPersonale">Stato:</label> 
-				<select th:field="*{statoPersonale}" nome="statoPersonale" class="form-control" th:value="${statoPersonale}">
-					<option value="attivo">Attivo</option>
-					<option value="non attivo">Non Attivo</option>
-				</select>
-			</div>
+
+				<!-- campo per il cognome -->
+				<div class="form-group">
+					<label for="cognome">Cognome:</label> <input type="text"
+						name="cognome" th:field="*{cognome}" class="form-control"
+						th:value="${cognome}" th:errorClass="is-invalid" />
+					<div th:if="${#fields.hasErrors('cognome')}" class="invalid-field">
+						<ul>
+							<li th:each="err : ${#fields.errors('cognome')}" th:text="${err}"></li>
+						</ul>
+					</div>
+
+					<!-- campo per la mail -->
+					<div class="form-group">
+						<label for="email">Email:</label> <input type="text"
+							th:field="*{email}" th:errorClass="is-invalid"
+							th:value="${email}" name="email" class="form-control" />
+						<div th:if="${#fields.hasErrors('email')}" class="invalid-field">
+							<ul>
+								<li th:each="err : ${#fields.errors('email')}" th:text="${err}"></li>
+							</ul>
+						</div>
+					</div>
+
+					<!-- campo per lo stato personale -->
+					<div class="form-group">
+						<label for="statoPersonale">Stato:</label> <select
+							th:field="*{statoPersonale}" nome="statoPersonale"
+							class="form-control" th:value="${statoPersonale}"
+							th:errorClass="is-invalid">
+							<option value="attivo">Attivo</option>
+							<option value="non attivo">Non Attivo</option>
+						</select>
+						<div th:if="${#fields.hasErrors('statoPersonale')}"
+							class="invalid-field">
+							<ul>
+								<li th:each="err : ${#fields.errors('statoPersonale')}"
+									th:text="${err}"></li>
+							</ul>
+						</div>
+					</div>
 
 
-			<button type="submit" class="btn btn-primary">
-				<i class="bi bi-save"></i>Salva Modifiche
-			</button>
+					<button type="submit" class="btn btn-primary">
+						<i class="bi bi-save"></i>Salva Modifiche
+					</button>
 
-			<a href="/operatore/dashboard" class="btn btn-secondary"
-				sec:authorize="hasAuthority('OPERATORE')"> <i
-				class="bi bi-arrow-left"></i> Torna alla Dashboard
-			</a>
-			
-				<a href="/admin/dashboard" class="btn btn-secondary"
-				sec:authorize="hasAuthority('ADMIN')"> <i
-				class="bi bi-arrow-left"></i> Torna alla Dashboard
-			</a>
-			
+					<a href="/operatore/dashboard" class="btn btn-secondary"
+						sec:authorize="hasAuthority('OPERATORE')"> <i
+						class="bi bi-arrow-left"></i> Torna alla Dashboard
+					</a> <a href="/admin/dashboard" class="btn btn-secondary"
+						sec:authorize="hasAuthority('ADMIN')"> <i
+						class="bi bi-arrow-left"></i> Torna alla Dashboard
+					</a>
 		</form>
 	</div>
 

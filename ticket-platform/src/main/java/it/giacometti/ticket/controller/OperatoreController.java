@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.zaxxer.hikari.metrics.micrometer.MicrometerMetricsTracker;
+
 @Controller
 @RequestMapping("/operatore")
 public class OperatoreController {
@@ -68,60 +70,70 @@ public class OperatoreController {
 	}
 
 	
-	 @PostMapping("/updateStatus") public String
-	store(@Valid @ModelAttribute("user") User editUser, BindingResult
-	  bindingResult, Model model) {
+    @PostMapping("/updateStatus")
+    public String store(@Valid @ModelAttribute("user") User editUser, BindingResult bindingResult, Model model) {
+      
+        List<Ticket> userTickets = ticketRepository.findByUserId(editUser.getId());
+
+        boolean allTicketsCompleted = true; 
+        
+        for (Ticket ticket : userTickets) {
+            if (!"completato".equals(ticket.getStato())) {
+                allTicketsCompleted = false;
+                break; // Esci dal ciclo se trovi un ticket non completato
+            }
+        }
+
+
+        if (!allTicketsCompleted && "non attivo".equals(editUser.getStatoPersonale())) {
+            bindingResult.rejectValue("statoPersonale", "error.user", "Non puoi cambiare lo stato dell'utente in 'non attivo' perché non tutti i ticket sono completati.");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "operatore/editOperatore";
+        }
+
+        userRepository.save(editUser);
+        return "redirect:/operatore/dashboard";
+    }
+}
 	  
-	 /* 
-	 * if ("non attivo".equalsIgnoreCase(user.getStatoPersonale())) {
-	 * bindingResult.rejectValue("user", "error.ticket",
-	 * "Non puoi assegnare un ticket a un operatore non attivo"); }
-	 */ 
-	  
-	  if (bindingResult.hasErrors()) {
-	  return "operatore/editOperatore"; 
-	  }
-	  
-	  userRepository.save(editUser); 
-	  return "redirect:/admin/dashboard"; 
-	  
-	  }
+
 	 
 
-	
-	@PostMapping("/updateStatus")
-	public String updateStatus(@RequestParam("nome") String nome, @RequestParam("cognome") String cognome,
-			@RequestParam("email") String email, @RequestParam("statoPersonale") String statoPersonale, Model model) {
-		
-		// Ottieni le informazioni sull'utente autenticato
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String currentEmail = authentication.getName();
+		/*
+		 * @PostMapping("/updateStatus") public String
+		 * updateStatus(@RequestParam("nome") String nome, @RequestParam("cognome")
+		 * String cognome,
+		 * 
+		 * @RequestParam("email") String email, @RequestParam("statoPersonale") String
+		 * statoPersonale, Model model) {
+		 * 
+		 * // Ottieni le informazioni sull'utente autenticato Authentication
+		 * authentication = SecurityContextHolder.getContext().getAuthentication();
+		 * String currentEmail = authentication.getName();
+		 * 
+		 * // Trova l'utente nel database usando l'email attuale User user =
+		 * userRepository.findByEmail(currentEmail).orElseThrow(() -> new
+		 * RuntimeException("User not found"));
+		 * 
+		 * // Aggiorna i dettagli dell'utente con i nuovi valori user.setNome(nome);
+		 * user.setCognome(cognome); user.setEmail(email);
+		 * user.setStatoPersonale(statoPersonale);
+		 * 
+		 * // Salva le modifiche nel database userRepository.save(user);
+		 * 
+		 * // Aggiorna il modello con i nuovi dettagli dell'utente
+		 * model.addAttribute("nome", user.getNome()); model.addAttribute("cognome",
+		 * user.getCognome()); model.addAttribute("email", user.getEmail());
+		 * model.addAttribute("statoPersonale", user.getStatoPersonale());
+		 * 
+		 * // Recupera e aggiunge i ticket dell'utente al modello List<Ticket> tickets =
+		 * ticketRepository.findByUserId(user.getId()); model.addAttribute("tickets",
+		 * tickets);
+		 * 
+		 * // Ritorna la vista della dashboard dell'operatore
+		 * 
+		 * return "redirect:/login"; }
+		 */
 
-		// Trova l'utente nel database usando l'email attuale
-		User user = userRepository.findByEmail(currentEmail).orElseThrow(() -> new RuntimeException("User not found"));
-
-		// Aggiorna i dettagli dell'utente con i nuovi valori
-		user.setNome(nome);
-		user.setCognome(cognome);
-		user.setEmail(email);
-		user.setStatoPersonale(statoPersonale);
-
-		// Salva le modifiche nel database
-		userRepository.save(user);
-
-		// Aggiorna il modello con i nuovi dettagli dell'utente
-		model.addAttribute("nome", user.getNome());
-		model.addAttribute("cognome", user.getCognome());
-		model.addAttribute("email", user.getEmail());
-		model.addAttribute("statoPersonale", user.getStatoPersonale());
-
-		// Recupera e aggiunge i ticket dell'utente al modello
-		List<Ticket> tickets = ticketRepository.findByUserId(user.getId());
-		model.addAttribute("tickets", tickets);
-
-		// Ritorna la vista della dashboard dell'operatore
-	
-		return "redirect:/login";
-	}
-}
-	

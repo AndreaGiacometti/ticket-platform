@@ -23,21 +23,22 @@ public class User {
 	private int id;
 
 	@Email
+	@NotBlank (message="Il campo non può essere vuoto")
 	private String email;
 
-	@NotBlank
-	@Size(min = 3)
+	@NotBlank (message="Il campo non può essere vuoto")
+	@Size(min = 3, max = 100)
 	private String password;
 
-	@NotBlank
-	@Size(min = 3)
+	@NotBlank (message="Il campo non può essere vuoto")
+	@Size(min = 3, max = 100)
 	private String nome;
 
-	@NotBlank
+	@NotBlank (message="Il campo non può essere vuoto")
 	@Size(min = 2)
 	private String cognome;
 
-	@NotNull
+	@NotNull (message="Il campo non può essere vuoto")
 	private String statoPersonale;
 
 	@ManyToMany(fetch = FetchType.EAGER)
