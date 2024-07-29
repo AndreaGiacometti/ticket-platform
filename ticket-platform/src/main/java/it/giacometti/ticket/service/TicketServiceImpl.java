@@ -25,7 +25,7 @@ public class TicketServiceImpl implements TicketService {
 	}
 
 	@Override
-	public List<Ticket> findTicketsByStato(String stato) {
+	public List<Ticket> getTicketsByStato(String stato) {
 		return ticketRepository.findByStato(stato);
 	}
 	

@@ -1,9 +1,11 @@
 package it.giacometti.ticket.api;
 
-
 import java.util.List;
 
+import javax.naming.spi.DirStateFactory.Result;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,36 +19,40 @@ import it.giacometti.ticket.service.TicketService;
 @RequestMapping("/api")
 public class TicketApi {
 
-    @Autowired
-    private TicketService ticketService;
+	@Autowired
+	private TicketService ticketService;
 
-    @GetMapping("/tickets")
-    public ResponseEntity<List<Ticket>> getAllTickets() {
-    	
-        List<Ticket> tickets = ticketService.getAllTickets();
-        
-        if (tickets.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        
-        return ResponseEntity.ok(tickets);
-    }
-    
-    @GetMapping("/categoria/{categoriaId}")
-    public ResponseEntity<List<Ticket>> getTicketsByCategoria(@PathVariable int categoriaId) {
-        List<Ticket> tickets = ticketService.getTicketsByCategoriaId(categoriaId);
-        if (tickets.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(tickets);
-    }
-    
-    @GetMapping("/stato/{stato}")
-    public ResponseEntity<List<Ticket>> getTicketsByCategoria(@PathVariable String stato) {
-        List<Ticket> tickets = ticketService.findTicketsByStato(stato);
-        if (tickets.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.ok(tickets);
-    }
+	@GetMapping("/tickets")
+	public ResponseEntity<List<Ticket>> getAllTickets() {
+
+		List<Ticket> tickets = ticketService.getAllTickets();
+
+		if (tickets.isEmpty()) {
+			return ResponseEntity.noContent().build();
+		}
+
+		return ResponseEntity.ok(tickets);
+	}
+
+	@GetMapping("/categoria/{categoriaId}")
+	public ResponseEntity<List<Ticket>> get(@PathVariable("categoriaId") int categoriaId) {
+
+		List<Ticket> tickets = ticketService.getTicketsByCategoriaId(categoriaId);
+
+		if (!tickets.isEmpty()) {
+			return new ResponseEntity<List<Ticket>>(tickets, HttpStatus.OK);
+		}
+		return new ResponseEntity<List<Ticket>>(HttpStatus.NOT_FOUND);
+	}
+
+	@GetMapping("/stato/{stato}")
+	public ResponseEntity<List<Ticket>> get(@PathVariable("stato") String stato) {
+
+		List<Ticket> tickets = ticketService.getTicketsByStato(stato);
+
+		if (!tickets.isEmpty()) {
+			return new ResponseEntity<List<Ticket>>(tickets, HttpStatus.OK);
+		}
+		return new ResponseEntity<List<Ticket>>(HttpStatus.NOT_FOUND);
+	}
 }

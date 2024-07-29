@@ -8,7 +8,7 @@ public interface TicketService {
 	
 	List<Ticket> getTicketsByCategoriaId(int categoriaId);
 	
-	List<Ticket> findTicketsByStato(String stato);
+	List<Ticket> getTicketsByStato(String stato);
 	
 	public List<Ticket> getAllTickets();
 	
