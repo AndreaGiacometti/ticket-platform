@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,18 +66,12 @@ public class TicketController {
 	}
 
 	@PostMapping("/ticket/create")
-	public String store(@ModelAttribute ("ticket") Ticket formTicket, Model model) {
-	    // Recupera l'operatore associato al ticket
-	    User operatore = userRepository.findById(formTicket.getUser().getId())
-	            .orElseThrow(() -> new IllegalArgumentException("Operatore non trovato"));
-
-	    // Verifica se l'operatore è attivo
-	    if (!operatore.getStatoPersonale().equalsIgnoreCase("attivo")) {
-	        model.addAttribute("errorMessage", "L'operatore selezionato non è attivo e non può essere assegnato a questo ticket.");
-	        return create(model); // Torna alla vista del form con il messaggio di errore
+	public String store(@Valid @ModelAttribute ("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
+	    
+	    if(bindingResult.hasErrors()) {
+	    	return "ticket/createTicket";
 	    }
-
-	    // Se l'operatore è attivo, salva il ticket
+	    
 	    ticketRepository.save(formTicket);
 	    return "redirect:/admin/dashboard";
 	}
@@ -85,7 +81,7 @@ public class TicketController {
 // MODIFICA
 
 	@GetMapping("/ticket/edit/{id}")
-	public String edit(@PathVariable int id, Model model) {
+	public String edit(@PathVariable("id") int id, Model model) {
 
 		model.addAttribute("ticket", ticketRepository.findById(id).get());
 
@@ -99,8 +95,8 @@ public class TicketController {
 	}
 
 	@PostMapping("/ticket/edit")
-	public String store(@ModelAttribute("editTicket") Ticket formTicket, Model model) {
-
+	public String store(@ModelAttribute Ticket ticket) {
+		
 		Ticket existingTicket = ticketRepository.findById(ticket.getId())
 				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + ticket.getId()));
 

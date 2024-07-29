@@ -24,13 +24,13 @@ public class Ticket {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@NotBlank
+	@NotBlank (message= "il campo non può essere vuoto")
 	private String titolo;
 
-	@NotBlank
+	@NotBlank (message= "il campo non può essere vuoto")
 	private String descrizione;
 
-	@NotBlank
+	@NotBlank (message= "il campo non può essere vuoto")
 	private String stato = "da fare";
 
 	private LocalDate dataCreazione;
