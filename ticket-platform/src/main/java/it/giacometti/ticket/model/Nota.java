@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,32 +20,19 @@ import jakarta.validation.constraints.Size;
 @Entity
 public class Nota {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@NotBlank
-	private String autore;
+    @Column(nullable = false, length = 100)
+    @NotBlank
+    private String autore;
 
-	private LocalDate dataCreazione;
+    private LocalDate dataCreazione;
 
-	private LocalDate dataModifica;
-	
-	@NotBlank (message = "Il testo non può essere vuoto")
-	@Size(max = 500, message = "Il testo non può superare i 500 caratteri")
-	private String testo;
-
-	@ManyToOne
-	@JsonBackReference
-	@JoinColumn(name = "ticket_id")
-	private Ticket ticket;
-
-	@ManyToOne
-	@JsonManagedReference
-	@JoinColumn(name = "operatore_id")
-	private User user;
-
-	@PrePersist
+    private LocalDate dataModifica;
+    
+    @PrePersist
 	protected void onCreate() {
 		if (dataCreazione == null) {
 			dataCreazione = LocalDate.now();
@@ -55,6 +43,22 @@ public class Nota {
 	protected void onUpdate() {
 		dataModifica = LocalDate.now();
 	}
+
+    @Column(nullable = false, length = 500)
+    @NotBlank(message = "Il testo non può essere vuoto")
+    @Size(max = 500, message = "Il testo non può superare i 500 caratteri")
+    private String testo;
+
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "ticket_id")
+    private Ticket ticket;
+
+    @ManyToOne
+    @JsonManagedReference
+    @JoinColumn(name = "operatore_id")
+    private User user;
+
 
 	// Getters e Setters
 	public int getId() {

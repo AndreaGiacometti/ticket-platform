@@ -18,10 +18,7 @@
 		<!-- Form per la creazione della nota -->
 		<form th:action="@{/note/create}" method="post" th:object="${nota}">
 
-			<!-- Campo nascosto per l'ID del ticket -->
-			<input type="hidden" name="ticket" th:value="${ticketId}" />
-
-			<!-- Campo nascosto per l'autore -->
+			<!-- Campo nascosto per l'autore perché è in read -->
 			<input type="hidden" name="autore"
 				th:value="${#authentication.principal.nome} + ' ' + ${#authentication.principal.cognome}" />
 
@@ -32,7 +29,7 @@
 			<!-- Campo per l'autore -->
 			<div class="mb-3">
 				<label for="titolo" class="form-label">Autore</label> <input
-					type="text" id="titolo" class="form-control"
+					type="text" name="autore" class="form-control"
 					th:value="${#authentication.principal.nome} + ' ' + ${#authentication.principal.cognome}"
 					readonly>
 			</div>
@@ -50,6 +47,9 @@
 					</ul>
 				</div>
 			</div>
+			
+			<!-- Campo nascosto per l'ID del ticket -->
+			<input type="hidden" name="ticket" th:value="${ticketId}" />
 
 			<!-- Bottone di invio -->
 			<button type="submit" class="btn btn-primary">Salva Nota</button>

@@ -1,6 +1,5 @@
 package it.giacometti.ticket.controller;
 
-import it.giacometti.ticket.model.Categoria;
 import it.giacometti.ticket.model.Ticket;
 import it.giacometti.ticket.model.User;
 import it.giacometti.ticket.repository.TicketRepository;
@@ -20,9 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.zaxxer.hikari.metrics.micrometer.MicrometerMetricsTracker;
 
 @Controller
 @RequestMapping("/operatore")

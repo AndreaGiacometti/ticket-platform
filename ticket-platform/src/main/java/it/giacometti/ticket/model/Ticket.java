@@ -6,6 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,40 +22,27 @@ import jakarta.validation.constraints.NotNull;
 @Entity
 public class Ticket {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@NotBlank (message= "il campo non può essere vuoto")
-	private String titolo;
+    @Column(nullable = false, length = 100)
+    @NotBlank(message = "Il campo non può essere vuoto")
+    private String titolo;
 
-	@NotBlank (message= "il campo non può essere vuoto")
-	private String descrizione;
+    @Column(nullable = false, length = 500)
+    @NotBlank(message = "Il campo non può essere vuoto")
+    private String descrizione;
 
-	@NotBlank (message= "il campo non può essere vuoto")
-	private String stato = "da fare";
+    @Column(nullable = false, length = 20)
+    @NotBlank(message = "Il campo non può essere vuoto")
+    private String stato = "da fare";
 
-	private LocalDate dataCreazione;
+    private LocalDate dataCreazione;
 
-	private LocalDate dataModifica;
-
-	@ManyToOne
-	@JsonBackReference
-	@NotNull (message= "il campo non può essere vuoto")
-	@JoinColumn(name = "user_id")
-	private User user;
-
-	@ManyToOne
-	@JsonBackReference
-	@NotNull (message= "il campo non può essere vuoto")
-	@JoinColumn(name = "categoria_id")
-	private Categoria categoria;
-
-	@JsonManagedReference
-	@OneToMany(mappedBy = "ticket")
-	private List<Nota> note;
-
-	@PrePersist
+    private LocalDate dataModifica;
+    
+    @PrePersist
 	protected void onCreate() {
 		if (dataCreazione == null) {
 			dataCreazione = LocalDate.now();
@@ -65,6 +53,22 @@ public class Ticket {
 	protected void onUpdate() {
 		dataModifica = LocalDate.now();
 	}
+
+    @ManyToOne
+    @JsonBackReference
+    @NotNull(message = "Il campo non può essere vuoto")
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JsonBackReference
+    @NotNull(message = "Il campo non può essere vuoto")
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "ticket")
+    private List<Nota> note;
 
 	// Getters and Setters
 

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -18,32 +19,37 @@ import jakarta.validation.constraints.Size;
 @Entity
 public class User {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
 
-	@Email
-	@NotBlank (message="Il campo non può essere vuoto")
-	private String email;
+    @Column(nullable = false, unique = true, length = 100)
+    @Email
+    @NotBlank(message="Il campo non può essere vuoto")
+    private String email;
 
-	@NotBlank (message="Il campo non può essere vuoto")
-	@Size(min = 3, max = 100)
-	private String password;
+    @Column(nullable = false, length = 100)
+    @NotBlank(message="Il campo non può essere vuoto")
+    @Size(min = 3, max = 100)
+    private String password;
 
-	@NotBlank (message="Il campo non può essere vuoto")
-	@Size(min = 3, max = 100)
-	private String nome;
+    @Column(nullable = false, length = 100)
+    @NotBlank(message="Il campo non può essere vuoto")
+    @Size(min = 3, max = 100)
+    private String nome;
 
-	@NotBlank (message="Il campo non può essere vuoto")
-	@Size(min = 2)
-	private String cognome;
+    @Column(nullable = false, length = 100)
+    @NotBlank(message="Il campo non può essere vuoto")
+    @Size(min = 2, max = 100)
+    private String cognome;
 
-	@NotNull (message="Il campo non può essere vuoto")
-	private String statoPersonale;
+    @Column(nullable = false, length = 20)
+    @NotNull(message="Il campo non può essere vuoto")
+    private String statoPersonale;
 
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JsonManagedReference
-	private Set<Role> roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonManagedReference
+    private Set<Role> roles;
 
 	// Getters and Setters
 

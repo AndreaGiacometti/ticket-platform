@@ -44,14 +44,18 @@ public class NotaController {
 
 	@PostMapping("/note/create")
 	public String store(@Valid @ModelAttribute("nota") Nota createNota, BindingResult bindingResult, Model model) {
-
+		
+		int ticketId = createNota.getTicket().getId();
+		
 		if (bindingResult.hasErrors()) {
+		
+			model.addAttribute("ticketId", ticketId);
+			
 			return "note/create";
 		}
 
 		notaRepository.save(createNota);
 
-		int ticketId = createNota.getTicket().getId();
 		return "redirect:/note/ticket/" + ticketId;
 	}
 
@@ -65,15 +69,19 @@ public class NotaController {
 
 	@PostMapping("/note/edit")
 	public String editNota(@Valid @ModelAttribute("nota") Nota editNota, BindingResult bindingResult, Model model) {
-
+		
+		int ticketId = editNota.getTicket().getId();
+		
 		if (bindingResult.hasErrors()) {
+			
+			model.addAttribute("ticketId", ticketId);
 			
 			return "note/edit";
 		}
 
 		notaRepository.save(editNota);
 
-		int ticketId = editNota.getTicket().getId();
+		
 		return "redirect:/note/ticket/" + ticketId;
 	}
 
