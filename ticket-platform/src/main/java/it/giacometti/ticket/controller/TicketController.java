@@ -67,7 +67,13 @@ public class TicketController {
 
 	@PostMapping("/ticket/create")
 	public String store(@Valid @ModelAttribute ("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
-	    
+		
+		User user = formTicket.getUser();
+		
+		if ("non attivo".equalsIgnoreCase(user.getStatoPersonale())) {
+	        bindingResult.rejectValue("user", "error.ticket", "Non puoi assegnare un ticket a un operatore non attivo");
+	    }
+		
 	    if(bindingResult.hasErrors()) {
 	    	return "ticket/createTicket";
 	    }

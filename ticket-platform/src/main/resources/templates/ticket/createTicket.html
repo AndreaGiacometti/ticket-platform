@@ -13,20 +13,15 @@
 	<div class="container mt-4">
 		<h1>Crea un Nuovo Ticket</h1>
 
-		<!-- Visualizza un messaggio di errore se presente -->
-		<div th:if="${errorMessage != null}" class="alert alert-danger">
-			<p th:text="${errorMessage}"></p>
-		</div>
-
 		<form id="create-new-ticket" th:action="@{/ticket/create}"
 			th:object=${ticket} method="post">
 			
-			<div th:if="${#fields.hasAnyErrors()}">
+			<!--  <div th:if="${#fields.hasAnyErrors()}">
 				<ul>
 						<li th:each="err : ${#fields.allErrors()}" 
 							th:text="${err}"></li>
 					</ul>
-			</div>
+			</div> -->
 
 		<div class="form-group">
 				<label for="titolo">Titolo</label> <input type="text"
@@ -44,27 +39,45 @@
 			<div class="form-group">
 				<label for="descrizione">Descrizione</label>
 				<textarea class="form-control" id="descrizione"
-					th:field=*{descrizione} rows="3">
+					th:field=*{descrizione} rows="3" th:errorClass="is-invalid">
 				</textarea>
+				<div th:if="${#fields.hasErrors('descrizione')}" class="invalid-field">
+					<ul>
+						<li th:each="err : ${#fields.errors('descrizione')}" 
+							th:text="${err}"></li>
+					</ul>
+				</div>
 			</div>
 
 			<div class="form-group">
 				<label for="operatore">Operatore</label> <select
-					class="form-control" id="operatore" th:field=*{user}>
-					<option value="" disabled selected>Seleziona un operatore</option>
+					class="form-control" id="operatore" th:field=*{user} th:errorClass="is-invalid">
+					
 					<option th:each="operatore : ${operatori}"
 						th:value="${operatore.id}"
 						th:text="${operatore.nome} + ' ' + ${operatore.cognome}"></option>
 				</select>
+				<div th:if="${#fields.hasErrors('user')}" class="invalid-field">
+					<ul>
+						<li th:each="err : ${#fields.errors('user')}" 
+							th:text="${err}"></li>
+					</ul>
+				</div>
 			</div>
 
 			<div class="form-group">
 				<label for="categoria">Categoria</label> <select
-					class="form-control" id="categoria" th:field=*{categoria}>
-					<option value="" disabled selected>Seleziona una categoria</option>
+					class="form-control" id="categoria" th:field=*{categoria} th:errorClass="is-invalid">
+					
 					<option th:each="categoria : ${categorie}"
 						th:value="${categoria.id}" th:text="${categoria.nome}"></option>
 				</select>
+					<div th:if="${#fields.hasErrors('categoria')}" class="invalid-field">
+					<ul>
+						<li th:each="err : ${#fields.errors('categoria')}" 
+							th:text="${err}"></li>
+					</ul>
+				</div>
 			</div>
 
 			<button type="submit" class="btn btn-primary">Crea Ticket</button>

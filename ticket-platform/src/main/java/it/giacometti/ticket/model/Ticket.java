@@ -16,6 +16,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Ticket {
@@ -39,11 +40,13 @@ public class Ticket {
 
 	@ManyToOne
 	@JsonBackReference
+	@NotNull (message= "il campo non può essere vuoto")
 	@JoinColumn(name = "user_id")
 	private User user;
 
 	@ManyToOne
 	@JsonBackReference
+	@NotNull (message= "il campo non può essere vuoto")
 	@JoinColumn(name = "categoria_id")
 	private Categoria categoria;
 
