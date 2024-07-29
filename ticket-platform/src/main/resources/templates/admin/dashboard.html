@@ -68,7 +68,8 @@
 										<form th:action="@{/ticket/delete/{id}(id=${ticket.id})}"
 											method="post" style="display: inline;">
 											<button type="submit" class="btn btn-danger btn-sm"
-												title="Elimina Ticket">
+												title="Elimina Ticket" th:data-confirm-delete="|Sei sicuro di voler cancellare questo ticket?|"
+												th:onclick="if(!confirm(this.getAttribute('data-confirm-delete'))) return false">
 												<i class="bi bi-trash"></i>
 											</button>
 										</form>

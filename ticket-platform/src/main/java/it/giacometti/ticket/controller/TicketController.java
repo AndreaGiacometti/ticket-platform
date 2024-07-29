@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,35 +65,34 @@ public class TicketController {
 	}
 
 	@PostMapping("/ticket/create")
-	public String store(@Valid @ModelAttribute ("ticket") Ticket formTicket, BindingResult bindingResult, Model model) {
-		
-		User user = formTicket.getUser();
-		
-		if ("non attivo".equalsIgnoreCase(user.getStatoPersonale())) {
-	        bindingResult.rejectValue("user", "error.ticket", "Non puoi assegnare un ticket a un operatore non attivo");
-	    }
-		
-	    if(bindingResult.hasErrors()) {
-	    	
-	    	 List<User> operatori = userRepository.findAll();
-	         model.addAttribute("operatori", operatori);
-	         
-	         List<Categoria> categorie = categoriaRepository.findAll();
-	         model.addAttribute("categorie", categorie);
+	public String store(@Valid @ModelAttribute("ticket") Ticket createTicket, BindingResult bindingResult,
+			Model model) {
 
-	    	return "ticket/createTicket";
-	    }
-	    
-	    ticketRepository.save(formTicket);
-	    return "redirect:/admin/dashboard";
+		User user = createTicket.getUser();
+
+		if ("non attivo".equalsIgnoreCase(user.getStatoPersonale())) {
+			bindingResult.rejectValue("user", "error.ticket", "Non puoi assegnare un ticket a un operatore non attivo");
+		}
+
+		if (bindingResult.hasErrors()) {
+
+			List<User> operatori = userRepository.findAll();
+			model.addAttribute("operatori", operatori);
+
+			List<Categoria> categorie = categoriaRepository.findAll();
+			model.addAttribute("categorie", categorie);
+
+			return "ticket/createTicket";
+		}
+
+		ticketRepository.save(createTicket);
+		return "redirect:/admin/dashboard";
 	}
 
-
-				
 // MODIFICA
 
 	@GetMapping("/ticket/edit/{id}")
-	public String edit(@PathVariable("id") int id, Model model) {
+	public String edit(@Valid @PathVariable("id") int id, Model model) {
 
 		model.addAttribute("ticket", ticketRepository.findById(id).get());
 
@@ -108,17 +106,22 @@ public class TicketController {
 	}
 
 	@PostMapping("/ticket/edit")
-	public String store(@ModelAttribute Ticket ticket) {
-		
-		Ticket existingTicket = ticketRepository.findById(ticket.getId())
-				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + ticket.getId()));
+	public String editTicket(@ModelAttribute("ticket") Ticket editTicket, BindingResult bindingResult, Model model) {
 
-		existingTicket.setStato(ticket.getStato());
-		existingTicket.setCategoria(ticket.getCategoria());
-		
-		ticketRepository.save(existingTicket);
-		
-		//Redirect alla dashboard in base al ruolo dell'utente loggato
+		if (bindingResult.hasErrors()) {
+
+			List<User> operatori = userRepository.findAll();
+			model.addAttribute("operatori", operatori);
+
+			List<Categoria> categorie = categoriaRepository.findAll();
+			model.addAttribute("categorie", categorie);
+
+			return "ticket/editTicket";
+		}
+
+		ticketRepository.save(editTicket);
+
+		// Redirect alla dashboard in base al ruolo dell'utente loggato
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 		boolean isAdmin = authentication.getAuthorities().stream().anyMatch(r -> r.getAuthority().equals("ADMIN"));
@@ -146,31 +149,14 @@ public class TicketController {
 
 	@GetMapping("/ticket/search")
 	public String searchTickets(@RequestParam("keyword") String keyword, Model model) {
-	    List<Ticket> tickets;
-	    if (keyword != null && !keyword.isEmpty()) {
-	        tickets = ticketRepository.findByTitoloContainingOrDescrizioneContaining(keyword, keyword);
-	    } else {
-	        tickets = ticketRepository.findAll();
-	    }
-	    model.addAttribute("tickets", tickets);
-	    return "ticket/searchResults"; // Nome del template per visualizzare i risultati
+		List<Ticket> tickets;
+		if (keyword != null && !keyword.isEmpty()) {
+			tickets = ticketRepository.findByTitoloContainingOrDescrizioneContaining(keyword, keyword);
+		} else {
+			tickets = ticketRepository.findAll();
+		}
+		model.addAttribute("tickets", tickets);
+		return "ticket/searchResults"; // Nome del template per visualizzare i risultati
 	}
-	
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

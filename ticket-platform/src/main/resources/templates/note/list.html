@@ -49,7 +49,8 @@
 							<form th:action="@{/note/delete/{id}(id=${nota.id})}"
 								method="post" style="display: inline;">
 								<button type="submit"
-									class="btn btn-danger btn-sm mt-2 d-inline-flex align-items-center">
+									class="btn btn-danger btn-sm mt-2 d-inline-flex align-items-center" th:data-confirm-delete="|Sei sicuro di voler cancellare questa nota?|"
+												th:onclick="if(!confirm(this.getAttribute('data-confirm-delete'))) return false">
 									<i class="bi bi-trash"></i> <span class="ms-1">Elimina</span>
 								</button>
 							</form>

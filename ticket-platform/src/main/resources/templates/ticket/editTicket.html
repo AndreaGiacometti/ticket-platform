@@ -19,10 +19,15 @@
 			<div class="card-header bg-primary text-white">
 				<h5 class="mb-0">Dettagli Ticket</h5>
 			</div>
-				<div class="card-body">
-				<form id="update-ticket" th:action="@{/ticket/edit}" th:object="${ticket}" method="post">
+			<div class="card-body">
+				<form id="update-ticket" th:action="@{/ticket/edit}"
+					th:object="${ticket}" method="post">
 
-					<input type="hidden" name="id" th:value="${ticket.id}">
+					<input type="hidden" th:field="*{id}"> 
+					<input type="hidden" th:field="*{user}"/>
+					<div sec:authorize="hasAuthority('OPERATORE')">
+					<input type="hidden" th:field="*{categoria}">
+					</div>
 
 					<div class="mb-3">
 						<label for="titolo">Titolo</label> <input type="text"
@@ -32,22 +37,26 @@
 
 					<div class="mb-3">
 						<label for="descrizione">Descrizione</label>
-						<textarea class="form-control" id="descrizione" th:field="*{descrizione}" th:text="${ticket.descrizione}" rows="3" readonly></textarea>
+						<textarea class="form-control" id="descrizione"
+							th:field="*{descrizione}" th:text="${ticket.descrizione}"
+							rows="3" readonly></textarea>
 					</div>
 
 					<div class="mb-3">
-						<label for="stato" class="d-block">Stato</label> 
-						<select class="form-select" id="stato" th:field="*{stato}">
+						<label for="stato" class="d-block">Stato</label> <select
+							class="form-select" id="stato" th:field="*{stato}">
 							<option th:each="status : ${statuses}" th:value="${status}"
 								th:text="${status}" th:selected="${status == ticket.stato}"></option>
 						</select>
 					</div>
 
 					<div class="form-group" sec:authorize="hasAuthority('ADMIN')">
-						<label for="categoria" class="d-block">Categoria</label> 
-						<select class="form-select" id="categoria" th:field="*{categoria}">
-							<option value="" disabled selected>Seleziona una categoria</option>
-							<option th:each="categoria : ${categorie}" th:value="${categoria.id}" th:text="${categoria.nome}"></option>
+						<label for="categoria" class="d-block">Categoria</label> <select
+							class="form-select" id="categoria" th:field="*{categoria}">
+							<option value="" disabled selected>Seleziona una
+								categoria</option>
+							<option th:each="categoria : ${categorie}"
+								th:value="${categoria.id}" th:text="${categoria.nome}"></option>
 						</select>
 					</div>
 
@@ -56,16 +65,16 @@
 							<i class="bi bi-save"></i> Modifica Ticket
 						</button>
 
-					 <a href="/admin/dashboard" class="btn btn-secondary"
+						<a href="/admin/dashboard" class="btn btn-secondary"
 							sec:authorize="hasAuthority('ADMIN')"> <i
 							class="bi bi-arrow-left"></i> Torna alla Dashboard
 						</a> <a href="/operatore/dashboard" class="btn btn-secondary"
 							sec:authorize="hasAuthority('OPERATORE')"> <i
 							class="bi bi-arrow-left"></i> Torna alla Dashboard
-						</a> 
-					</div> 
+						</a>
+					</div>
 				</form>
-				</div>
+			</div>
 		</div>
 	</div>
 
