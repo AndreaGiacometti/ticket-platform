@@ -42,7 +42,7 @@ public class TicketController {
 	@GetMapping("/ticket/{id}")
 	public String show(@PathVariable int id, Model model) {
 		Ticket ticket = ticketRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid ticket Id:" + id));
+				.orElseThrow(() -> new IllegalArgumentException("ID" + id + "non trovato"));
 		model.addAttribute("ticket", ticket);
 		return "ticket/viewTicket";
 	}
@@ -53,11 +53,9 @@ public class TicketController {
 	public String create(Model model) {
 		model.addAttribute("ticket", new Ticket());
 
-		// Aggiungi la lista degli operatori al modello
 		List<User> operatori = userRepository.findAll();
 		model.addAttribute("operatori", operatori);
 
-		// Aggiungi la lista delle categorie al modello
 		List<Categoria> categorie = categoriaRepository.findAll();
 		model.addAttribute("categorie", categorie);
 
@@ -92,7 +90,7 @@ public class TicketController {
 // MODIFICA
 
 	@GetMapping("/ticket/edit/{id}")
-	public String edit(@Valid @PathVariable("id") int id, Model model) {
+	public String edit(@PathVariable("id") int id, Model model) {
 
 		model.addAttribute("ticket", ticketRepository.findById(id).get());
 
@@ -156,7 +154,7 @@ public class TicketController {
 			tickets = ticketRepository.findAll();
 		}
 		model.addAttribute("tickets", tickets);
-		return "ticket/searchResults"; // Nome del template per visualizzare i risultati
+		return "ticket/searchResults";
 	}
 
 }

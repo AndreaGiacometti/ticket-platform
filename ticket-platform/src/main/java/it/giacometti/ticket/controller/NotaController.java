@@ -6,46 +6,49 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import it.giacometti.ticket.model.Categoria;
 import it.giacometti.ticket.model.Nota;
-import it.giacometti.ticket.model.Ticket;
-import it.giacometti.ticket.model.User;
 import it.giacometti.ticket.repository.NotaRepository;
 import jakarta.validation.Valid;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("/note")
+@RequestMapping
 public class NotaController {
 
 	@Autowired
 	private NotaRepository notaRepository;
 
 // VISUALIZZA
-	
-	@GetMapping("/ticket/{ticketId}")
+
+	@GetMapping("/note/ticket/{ticketId}")
 	public String show(@PathVariable int ticketId, Model model) {
+
 		List<Nota> note = notaRepository.findByTicketId(ticketId);
+
 		model.addAttribute("note", note);
 		model.addAttribute("ticketId", ticketId);
-		return "note/list"; // Nome della vista che mostra la lista delle note
+
+		return "note/list";
 	}
 
 // CREA
 
-	@GetMapping("/create/{ticketId}") public String create(@PathVariable int
-	 ticketId, Model model) { model.addAttribute("nota", new Nota());
-	 return "note/create";
-	 }
-	 	
-	@PostMapping("/create")
+	@GetMapping("/note/create/{ticketId}")
+	public String create(@PathVariable int ticketId, Model model) {
+
+		model.addAttribute("nota", new Nota());
+
+		return "note/create";
+	}
+
+	@PostMapping("/note/create")
 	public String store(@Valid @ModelAttribute("nota") Nota createNota, BindingResult bindingResult, Model model) {
-		
+
 		if (bindingResult.hasErrors()) {
 			return "note/create";
 		}
-		
+
 		notaRepository.save(createNota);
 
 		int ticketId = createNota.getTicket().getId();
@@ -54,48 +57,38 @@ public class NotaController {
 
 // MODIFICA
 
-	@GetMapping("/edit/{id}")
+	@GetMapping("/note/edit/{id}")
 	public String editNotaForm(@PathVariable int id, Model model) {
 		model.addAttribute("nota", notaRepository.findById(id).get());
 		return "note/edit";
 	}
 
-	/*
-	 * @PostMapping("/edit") public String updateNota(@ModelAttribute Nota nota) {
-	 * 
-	 * Nota existingNota = notaRepository.findById(nota.getId()) .orElseThrow(() ->
-	 * new IllegalArgumentException("Invalid nota Id:" + nota.getId()));
-	 * 
-	 * existingNota.setAutore(nota.getAutore());
-	 * existingNota.setTesto(nota.getTesto());
-	 * 
-	 * notaRepository.save(existingNota);
-	 * 
-	 * return "redirect:/note/ticket/" + existingNota.getTicket().getId(); //
-	 * Ritorna alla lista delle note del ticket }
-	 */
-	
-	@PostMapping("/edit")
-	public String editNota(@ModelAttribute("nota") Nota editNota, BindingResult bindingResult, Model model) {
+	@PostMapping("/note/edit")
+	public String editNota(@Valid @ModelAttribute("nota") Nota editNota, BindingResult bindingResult, Model model) {
 
 		if (bindingResult.hasErrors()) {
-
-			return "ticket/editTicket";
+			
+			return "note/edit";
 		}
 
 		notaRepository.save(editNota);
-		
+
 		int ticketId = editNota.getTicket().getId();
 		return "redirect:/note/ticket/" + ticketId;
 	}
+
 // ELIMINA
 
-	@PostMapping("/delete/{id}")
-	public String deleteNota(@PathVariable int id) {
+	@PostMapping("/note/delete/{id}")
+	public String deleteNota(@Valid @PathVariable int id) {
+
 		Nota nota = notaRepository.findById(id)
-				.orElseThrow(() -> new IllegalArgumentException("Invalid nota Id:" + id));
-		int ticketId = nota.getTicket().getId(); // Ottieni l'ID del ticket associato
-		notaRepository.delete(nota);
-		return "redirect:/note/ticket/" + ticketId; // Ritorna alla lista delle note del ticket
+				.orElseThrow(() -> new IllegalArgumentException("ID" + id + "non trovato"));
+		
+		notaRepository.deleteById(id);
+		
+		int ticketId = nota.getTicket().getId();
+		
+		return "redirect:/note/ticket/" + ticketId;
 	}
 }

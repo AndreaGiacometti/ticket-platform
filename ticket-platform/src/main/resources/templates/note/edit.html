@@ -45,9 +45,15 @@
 			<div class="form-group">
 				<label for="testo">Testo della Nota</label>
 				<textarea class="form-control" id="testo" name="testo"
-					th:field="*{testo}" rows="4"
-					placeholder="Inserisci il testo della nota" required></textarea>
-			</div>
+					th:field="*{testo}" rows="4" th:errorClass="is-invalid"
+					placeholder="Inserisci il testo della nota">
+					</textarea>
+				<div th:if="${#fields.hasErrors('testo')}" class="invalid-field">
+					<ul>
+						<li th:each="err : ${#fields.errors('testo')}" th:text="${err}"></li>
+					</ul>
+				</div>
+			</div>	
 
 			<button type="submit" class="btn btn-primary">Aggiorna Nota</button>
 			<a th:href="@{/note/ticket/{ticketId}(ticketId=${nota.ticket.id})}"

@@ -23,14 +23,14 @@ public class Nota {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@NotBlank(message = "Il campo autore non può essere vuoto")
+	@NotBlank
 	private String autore;
 
 	private LocalDate dataCreazione;
 
 	private LocalDate dataModifica;
 	
-	@NotBlank(message = "Il testo non può essere vuoto")
+	@NotBlank (message = "Il testo non può essere vuoto")
 	@Size(max = 500, message = "Il testo non può superare i 500 caratteri")
 	private String testo;
 

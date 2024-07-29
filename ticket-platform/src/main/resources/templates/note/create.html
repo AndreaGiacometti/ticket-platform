@@ -22,10 +22,12 @@
 			<input type="hidden" name="ticket" th:value="${ticketId}" />
 
 			<!-- Campo nascosto per l'autore -->
-			<input type="hidden" name="autore" th:value="${#authentication.principal.nome} + ' ' + ${#authentication.principal.cognome}" />
+			<input type="hidden" name="autore"
+				th:value="${#authentication.principal.nome} + ' ' + ${#authentication.principal.cognome}" />
 
 			<!-- Campo nascosto per l'ID dell'operatore -->
-			<input type="hidden" name="user" th:value="${#authentication.principal.id}" />
+			<input type="hidden" name="user"
+				th:value="${#authentication.principal.id}" />
 
 			<!-- Campo per l'autore -->
 			<div class="mb-3">
@@ -39,8 +41,14 @@
 			<div class="form-group">
 				<label for="testo">Testo della Nota</label>
 				<textarea class="form-control" id="testo" name="testo"
-					th:field="*{testo}" rows="4"
-					placeholder="Inserisci il testo della nota" required></textarea>
+					th:field="*{testo}" rows="4" th:errorClass="is-invalid"
+					placeholder="Inserisci il testo della nota">
+					</textarea>
+				<div th:if="${#fields.hasErrors('testo')}" class="invalid-field">
+					<ul>
+						<li th:each="err : ${#fields.errors('testo')}" th:text="${err}"></li>
+					</ul>
+				</div>
 			</div>
 
 			<!-- Bottone di invio -->
