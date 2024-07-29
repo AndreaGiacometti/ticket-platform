@@ -19,20 +19,21 @@
 		<form th:action="@{/note/create}" method="post" th:object="${nota}">
 
 			<!-- Campo nascosto per l'ID del ticket -->
-			<input type="hidden" name="ticketId" th:value="${ticketId}" />
+			<input type="hidden" name="ticket" th:value="${ticketId}" />
+
+			<!-- Campo nascosto per l'autore -->
+			<input type="hidden" name="autore" th:value="${#authentication.principal.nome} + ' ' + ${#authentication.principal.cognome}" />
 
 			<!-- Campo nascosto per l'ID dell'operatore -->
-			<input type="hidden" name="operatoreId"
-				th:value="${#authentication.principal.id}" />
+			<input type="hidden" name="user" th:value="${#authentication.principal.id}" />
 
 			<!-- Campo per l'autore -->
 			<div class="mb-3">
 				<label for="titolo" class="form-label">Autore</label> <input
-					type="text" id="titolo" name="titolo" class="form-control"
+					type="text" id="titolo" class="form-control"
 					th:value="${#authentication.principal.nome} + ' ' + ${#authentication.principal.cognome}"
 					readonly>
 			</div>
-
 
 			<!-- Campo per il testo della nota -->
 			<div class="form-group">
