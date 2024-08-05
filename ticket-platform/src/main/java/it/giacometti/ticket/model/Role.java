@@ -18,7 +18,24 @@ public class Role {
     @Size (min = 3)
 	private String nome;
 	
+	
+	
 	public String getName() {
 		return nome;
+	}
+		
+	public void setName(String nome) {
+			this.nome = nome;
+		}
+		
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+			this.id = id;
+		
+
 	}
 }

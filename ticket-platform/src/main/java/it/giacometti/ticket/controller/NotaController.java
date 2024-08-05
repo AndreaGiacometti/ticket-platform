@@ -10,6 +10,7 @@ import it.giacometti.ticket.model.Nota;
 import it.giacometti.ticket.repository.NotaRepository;
 import jakarta.validation.Valid;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -79,6 +80,11 @@ public class NotaController {
 			return "note/edit";
 		}
 
+		Nota existingNota = notaRepository.findById(editNota.getId()).orElseThrow(() -> new RuntimeException("Nota non trovata"));
+	    
+	    editNota.setDataCreazione(existingNota.getDataCreazione());
+	    editNota.setDataModifica(LocalDate.now());
+		
 		notaRepository.save(editNota);
 
 		

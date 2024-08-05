@@ -21,10 +21,6 @@
 			<!-- Campo nascosto per l'ID del ticket -->
 			<input type="hidden" name="ticket" th:value="${ticketId}"/>
 
-			<!-- Campo nascosto per l'autore perché è in read -->
-			<input type="hidden" name="autore"
-				th:value="${#authentication.principal.nome} + ' ' + ${#authentication.principal.cognome}" />
-
 			<!-- Campo nascosto per l'ID dell'operatore -->
 			<input type="hidden" name="user"
 				th:value="${#authentication.principal.id}" />

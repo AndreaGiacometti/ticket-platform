@@ -1,12 +1,15 @@
 package it.giacometti.ticket.controller;
 
+import it.giacometti.ticket.model.Role;
 import it.giacometti.ticket.model.Ticket;
 import it.giacometti.ticket.model.User;
+import it.giacometti.ticket.repository.RoleRepository;
 import it.giacometti.ticket.repository.TicketRepository;
 import it.giacometti.ticket.repository.UserRepository;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,6 +23,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 @Controller
 @RequestMapping("/operatore")
@@ -30,6 +36,9 @@ public class OperatoreController {
 
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private RoleRepository roleRepository;
 
 //VISUALIZZA
 
@@ -51,10 +60,59 @@ public class OperatoreController {
 		return "operatore/dashboard";
 	}
 
+// CREA
+	
+	@GetMapping("/create")
+    public String create(Model model) {
+		
+		List<Role> roles = roleRepository.findAll();
+		
+        model.addAttribute("user", new User());
+        model.addAttribute("roles", roles);
+        
+        return "admin/createUser";
+    }
+
+    @PostMapping("/create")
+    public String create(@Valid @ModelAttribute("user") User user, BindingResult bindingResult, Model model) {
+    	
+        if (bindingResult.hasErrors()) {
+        	
+            List<Role> roles = roleRepository.findAll();
+            model.addAttribute("roles", roles);
+            
+            return "admin/createUser";
+        }
+
+        int operatoreRoleId = 2;
+        Role role = roleRepository.findById(operatoreRoleId)
+                                  .orElseThrow(() -> new RuntimeException("Ruolo 'Operatore' non trovato"));
+
+        user.setRoles(Set.of(role));  
+        
+		/*
+		 * String emailWithDomain = user.getEmail() + "@ticketfacile.it";
+		 * user.setEmail(emailWithDomain);
+		 * 
+		 * String password = (user.getCognome() + "." + user.getNome()).toLowerCase();
+		 * user.setPassword(password);
+		 */
+        
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encryptedPassword = passwordEncoder.encode(user.getPassword());
+      
+        String passwordWithPrefix = "{bcrypt}" + encryptedPassword;
+
+        user.setPassword(passwordWithPrefix);
+
+        userRepository.save(user);
+        return "redirect:/admin/dashboard";
+    }
+
 //MODIFICA
 
 	@GetMapping("/edit")
-	public String editUserForm(Model model) {
+	public String edit(Model model) {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		String currentUsername = authentication.getName();
@@ -68,7 +126,13 @@ public class OperatoreController {
 
 	
     @PostMapping("/updateStatus")
-    public String store(@Valid @ModelAttribute("user") User editUser, BindingResult bindingResult, Model model) {
+    public String editUser(@Valid @ModelAttribute("user") User editUser, BindingResult bindingResult, Model model) {
+    	
+    	int operatoreRoleId = 2;
+        Role role = roleRepository.findById(operatoreRoleId)
+                                  .orElseThrow(() -> new RuntimeException("Ruolo 'Operatore' non trovato"));
+
+        editUser.setRoles(Set.of(role));  
       
         List<Ticket> userTickets = ticketRepository.findByUserId(editUser.getId());
 
@@ -77,7 +141,7 @@ public class OperatoreController {
         for (Ticket ticket : userTickets) {
             if (!"completato".equals(ticket.getStato())) {
                 allTicketsCompleted = false;
-                break; // Esci dal ciclo se trovi un ticket non completato
+                break;
             }
         }
 
@@ -95,42 +159,4 @@ public class OperatoreController {
     }
 }
 	  
-
-	 
-
-		/*
-		 * @PostMapping("/updateStatus") public String
-		 * updateStatus(@RequestParam("nome") String nome, @RequestParam("cognome")
-		 * String cognome,
-		 * 
-		 * @RequestParam("email") String email, @RequestParam("statoPersonale") String
-		 * statoPersonale, Model model) {
-		 * 
-		 * // Ottieni le informazioni sull'utente autenticato Authentication
-		 * authentication = SecurityContextHolder.getContext().getAuthentication();
-		 * String currentEmail = authentication.getName();
-		 * 
-		 * // Trova l'utente nel database usando l'email attuale User user =
-		 * userRepository.findByEmail(currentEmail).orElseThrow(() -> new
-		 * RuntimeException("User not found"));
-		 * 
-		 * // Aggiorna i dettagli dell'utente con i nuovi valori user.setNome(nome);
-		 * user.setCognome(cognome); user.setEmail(email);
-		 * user.setStatoPersonale(statoPersonale);
-		 * 
-		 * // Salva le modifiche nel database userRepository.save(user);
-		 * 
-		 * // Aggiorna il modello con i nuovi dettagli dell'utente
-		 * model.addAttribute("nome", user.getNome()); model.addAttribute("cognome",
-		 * user.getCognome()); model.addAttribute("email", user.getEmail());
-		 * model.addAttribute("statoPersonale", user.getStatoPersonale());
-		 * 
-		 * // Recupera e aggiunge i ticket dell'utente al modello List<Ticket> tickets =
-		 * ticketRepository.findByUserId(user.getId()); model.addAttribute("tickets",
-		 * tickets);
-		 * 
-		 * // Ritorna la vista della dashboard dell'operatore
-		 * 
-		 * return "redirect:/login"; }
-		 */
 

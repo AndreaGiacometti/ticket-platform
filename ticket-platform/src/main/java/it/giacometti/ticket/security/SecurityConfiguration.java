@@ -16,9 +16,15 @@ public class SecurityConfiguration {
 	@Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(requests -> requests
+        		.requestMatchers("/operatore/create").hasAuthority("ADMIN")
                 .requestMatchers("/operatore/**").hasAnyAuthority("OPERATORE", "ADMIN")
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
-                .requestMatchers("/**").permitAll()).formLogin(withDefaults()).logout(withDefaults());
+                .requestMatchers("/ticket/create").hasAuthority("ADMIN")
+                .requestMatchers("/**")
+                .permitAll())
+        .formLogin(formLogin -> formLogin
+                .successHandler(new CustomAuthenticationSuccessHandler()))
+        .logout(withDefaults());
     
 		return http.build();
     }

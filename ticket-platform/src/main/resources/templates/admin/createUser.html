@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Creazione Utente</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Crea un Nuovo Utente</h1>
+
+        <form th:action="@{/operatore/create}" th:object="${user}" method="post">
+
+            <!-- Campo nascosto per stato personale -->
+            <input type="hidden" name="statoPersonale" value="Attivo">
+
+            <!-- Campo Nome -->
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" class="form-control" id="nome" th:field="*{nome}" th:errorClass="is-invalid" placeholder="Nome">
+                <div th:if="${#fields.hasErrors('nome')}" class="invalid-feedback">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('nome')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Campo Cognome -->
+            <div class="form-group">
+                <label for="cognome">Cognome</label>
+                <input type="text" class="form-control" id="cognome" th:field="*{cognome}" th:errorClass="is-invalid" placeholder="Cognome">
+                <div th:if="${#fields.hasErrors('cognome')}" class="invalid-feedback">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('cognome')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Campo Email -->
+            <div class="form-group">
+                <label for="email">Email</label>          
+                    <input type="text" class="form-control" id="email" th:field="*{email}" th:errorClass="is-invalid">
+                <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('email')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+            </div>
+
+              <!-- Campo Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="text" class="form-control" id="password" th:field="*{password}">
+                <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
+                    <ul>
+                        <li th:each="err : ${#fields.errors('password')}" th:text="${err}"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Crea Utente</button>
+            <a href="#" class="btn btn-secondary" onclick="history.back()"> <i class="bi bi-arrow-left"></i> Annulla
+            </a>
+        </form>
+    </div>
+</body>
+</html>

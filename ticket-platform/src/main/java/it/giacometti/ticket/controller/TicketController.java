@@ -63,7 +63,7 @@ public class TicketController {
 	}
 
 	@PostMapping("/ticket/create")
-	public String store(@Valid @ModelAttribute("ticket") Ticket createTicket, BindingResult bindingResult,
+	public String create(@Valid @ModelAttribute("ticket") Ticket createTicket, BindingResult bindingResult,
 			Model model) {
 
 		User user = createTicket.getUser();
