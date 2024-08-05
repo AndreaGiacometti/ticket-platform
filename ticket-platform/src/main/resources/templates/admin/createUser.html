@@ -50,7 +50,7 @@
               <!-- Campo Password -->
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="text" class="form-control" id="password" th:field="*{password}">
+                <input type="text" class="form-control" id="password" th:field="*{password}" th:errorClass="is-invalid">
                 <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback">
                     <ul>
                         <li th:each="err : ${#fields.errors('password')}" th:text="${err}"></li>
