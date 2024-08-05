@@ -4,15 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Admin</title>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link
+	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
+	rel="stylesheet">
+<link
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+	rel="stylesheet">
 </head>
 <body>
 	<div class="container mt-4">
 		<h1 class="mb-4">Dashboard Admin</h1>
-
-		<!-- Campo di ricerca -->
-		<form action="/ticket/search" method="get" class="mb-4">
+		<div th:if="${#lists.isEmpty(tickets)}" class="alert alert-info">
+			Nessun ticket trovato per la tua ricerca.</div>
+			
+		<form action="/admin/dashboard" method="get" class="mb-4">
 			<div class="input-group">
 				<input type="text" name="keyword" class="form-control"
 					placeholder="Cerca per titolo o descrizione..."
@@ -23,7 +28,6 @@
 			</div>
 		</form>
 
-		<!-- Mostra la lista dei ticket -->
 		<div class="card">
 			<div class="card-header bg-primary text-white">
 				<h5 class="mb-0">Lista Ticket</h5>
@@ -48,7 +52,8 @@
 								<td th:text="${ticket.descrizione}"></td>
 								<td th:text="${ticket.stato}"></td>
 								<td>
-									<div class="d-flex justify-content-center align-items-center" style="width: 60px">
+									<div class="d-flex justify-content-center align-items-center"
+										style="width: 60px">
 										<a th:href="@{/ticket/{id}(id=${ticket.id})}"
 											class="btn btn-info btn-sm"
 											title="Visualizza Dettaglio Ticket"> <i class="bi bi-eye"></i>
@@ -56,7 +61,8 @@
 									</div>
 								</td>
 								<td>
-									<div class="d-flex justify-content-center align-items-center" style="width: 60px">
+									<div class="d-flex justify-content-center align-items-center"
+										style="width: 60px">
 										<a th:href="@{/ticket/edit/{id}(id=${ticket.id})}"
 											class="btn btn-warning btn-sm" title="Modifica Ticket"> <i
 											class="bi bi-pencil"></i>
@@ -64,19 +70,20 @@
 									</div>
 								</td>
 								<td>
-									<div class="d-flex justify-content-center align-items-center" style="width: 60px">
+									<div class="d-flex justify-content-center align-items-center"
+										style="width: 60px">
 										<form th:action="@{/ticket/delete/{id}(id=${ticket.id})}"
 											method="post" style="display: inline;">
 											<button type="submit" class="btn btn-danger btn-sm"
-												title="Elimina Ticket" th:data-confirm-delete="|Sei sicuro di voler cancellare questo ticket?|"
-												th:onclick="if(!confirm(this.getAttribute('data-confirm-delete'))) return false">
+												title="Elimina Ticket">
 												<i class="bi bi-trash"></i>
 											</button>
 										</form>
 									</div>
 								</td>
 								<td>
-									<div class="d-flex justify-content-center align-items-center" style="width: 60px">
+									<div class="d-flex justify-content-center align-items-center"
+										style="width: 60px">
 										<a th:href="@{/note/ticket/{ticketId}(ticketId=${ticket.id})}"
 											class="btn btn-secondary btn-sm"
 											title="Visualizza o Aggiungi Nota"> <i
@@ -88,13 +95,12 @@
 						</tbody>
 					</table>
 				</div>
-				<!-- Bottone per creare un nuovo ticket -->
+
 				<div class="text-center mt-4">
 					<a href="/ticket/create" class="btn btn-success"> <i
 						class="bi bi-plus-circle"></i> Crea Nuovo Ticket
 					</a>
 				</div>
-					<!-- Bottone per creare un nuovo operatore -->
 				<div class="text-center mt-4">
 					<a href="/operatore/create" class="btn btn-success"> <i
 						class="bi bi-plus-circle"></i> Crea Nuovo Operatore

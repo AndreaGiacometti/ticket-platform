@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import it.giacometti.ticket.model.Categoria;
 import it.giacometti.ticket.model.User;
@@ -141,20 +140,6 @@ public class TicketController {
 	public String delete(@PathVariable int id) {
 		ticketRepository.deleteById(id);
 		return "redirect:/admin/dashboard";
-	}
-
-// SEARCHBAR
-
-	@GetMapping("/ticket/search")
-	public String searchTickets(@RequestParam("keyword") String keyword, Model model) {
-		List<Ticket> tickets;
-		if (keyword != null && !keyword.isEmpty()) {
-			tickets = ticketRepository.findByTitoloContainingOrDescrizioneContaining(keyword, keyword);
-		} else {
-			tickets = ticketRepository.findAll();
-		}
-		model.addAttribute("tickets", tickets);
-		return "ticket/searchResults";
 	}
 
 }
