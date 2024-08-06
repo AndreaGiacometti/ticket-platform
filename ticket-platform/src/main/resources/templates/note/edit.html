@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<title>Modifica Nota</title>
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
 	rel="stylesheet">
@@ -15,6 +17,10 @@
 		<h1 class="mb-4">Modifica Nota</h1>
 
 		<form th:action="@{/note/edit}" th:object="${nota}" method="post">
+
+			<!-- Campo nascosto per token csrf -->
+			<input type="hidden" th:name="${_csrf.parameterName}"
+				th:value="${_csrf.token}" />
 
 			<!-- Campo nascosto per l'ID della nota -->
 			<input type="hidden" name="id" th:value="${nota.id}" />
@@ -53,7 +59,7 @@
 						<li th:each="err : ${#fields.errors('testo')}" th:text="${err}"></li>
 					</ul>
 				</div>
-			</div>	
+			</div>
 
 			<button type="submit" class="btn btn-primary">Aggiorna Nota</button>
 			<a th:href="@{/note/ticket/{ticketId}(ticketId=${nota.ticket.id})}"

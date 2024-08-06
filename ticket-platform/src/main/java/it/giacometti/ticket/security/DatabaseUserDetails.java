@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import it.giacometti.ticket.model.User;
 import it.giacometti.ticket.model.Role;
 
+@SuppressWarnings("serial")
 public class DatabaseUserDetails implements UserDetails {
 
 	private final int id;

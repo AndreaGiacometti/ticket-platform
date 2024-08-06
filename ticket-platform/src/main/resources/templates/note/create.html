@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 <title>Crea Nota</title>
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
@@ -15,11 +16,14 @@
 	<div class="container mt-4">
 		<h1>Crea una Nuova Nota</h1>
 
-		<!-- Form per la creazione della nota -->
 		<form th:action="@{/note/create}" method="post" th:object="${nota}">
 
+			<!-- Campo nascosto per token csrf -->
+			<input type="hidden" th:name="${_csrf.parameterName}"
+				th:value="${_csrf.token}" />
+
 			<!-- Campo nascosto per l'ID del ticket -->
-			<input type="hidden" name="ticket" th:value="${ticketId}"/>
+			<input type="hidden" name="ticket" th:value="${ticketId}" />
 
 			<!-- Campo nascosto per l'ID dell'operatore -->
 			<input type="hidden" name="user"

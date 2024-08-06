@@ -1,5 +1,6 @@
 package it.giacometti.ticket.controller;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -115,6 +116,11 @@ public class TicketController {
 
 			return "ticket/editTicket";
 		}
+		
+	Ticket existingTicket = ticketRepository.findById(editTicket.getId()).orElseThrow(() -> new RuntimeException("Ticket non trovato"));
+	    
+	    editTicket.setDataCreazione(existingTicket.getDataCreazione());
+	    editTicket.setDataModifica(LocalDate.now());
 
 		ticketRepository.save(editTicket);
 
@@ -137,8 +143,10 @@ public class TicketController {
 // ELIMINA
 
 	@PostMapping("/ticket/delete/{id}")
-	public String delete(@PathVariable int id) {
+	public String delete(@Valid @PathVariable int id) {
+		
 		ticketRepository.deleteById(id);
+		
 		return "redirect:/admin/dashboard";
 	}
 

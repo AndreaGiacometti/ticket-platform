@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+<meta charset="UTF-8">
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 <title>Creazione Ticket</title>
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
@@ -16,27 +19,31 @@
 		<form id="create-new-ticket" th:action="@{/ticket/create}"
 			th:object=${ticket} method="post">
 
-		<div class="form-group">
+			<!-- Campo nascosto per token csrf -->
+			<input type="hidden" th:name="${_csrf.parameterName}"
+				th:value="${_csrf.token}" />
+
+			<div class="form-group">
 				<label for="titolo">Titolo</label> <input type="text"
 					class="form-control" id="titolo" th:field=*{titolo}
 					th:errorClass="is-invalid">
 				<div th:if="${#fields.hasErrors('titolo')}" class="invalid-field">
 					<ul>
-						<li th:each="err : ${#fields.errors('titolo')}" 
-							th:text="${err}"></li>
+						<li th:each="err : ${#fields.errors('titolo')}" th:text="${err}"></li>
 					</ul>
 				</div>
 			</div>
-			
+
 
 			<div class="form-group">
 				<label for="descrizione">Descrizione</label>
 				<textarea class="form-control" id="descrizione"
 					th:field=*{descrizione} rows="3" th:errorClass="is-invalid">
 				</textarea>
-				<div th:if="${#fields.hasErrors('descrizione')}" class="invalid-field">
+				<div th:if="${#fields.hasErrors('descrizione')}"
+					class="invalid-field">
 					<ul>
-						<li th:each="err : ${#fields.errors('descrizione')}" 
+						<li th:each="err : ${#fields.errors('descrizione')}"
 							th:text="${err}"></li>
 					</ul>
 				</div>
@@ -44,30 +51,31 @@
 
 			<div class="form-group">
 				<label for="operatore">Operatore</label> <select
-					class="form-control" id="operatore" th:field=*{user} th:errorClass="is-invalid">
-					
+					class="form-control" id="operatore" th:field=*{user}
+					th:errorClass="is-invalid">
+
 					<option th:each="operatore : ${operatori}"
 						th:value="${operatore.id}"
 						th:text="${operatore.nome} + ' ' + ${operatore.cognome}"></option>
 				</select>
 				<div th:if="${#fields.hasErrors('user')}" class="invalid-field">
 					<ul>
-						<li th:each="err : ${#fields.errors('user')}" 
-							th:text="${err}"></li>
+						<li th:each="err : ${#fields.errors('user')}" th:text="${err}"></li>
 					</ul>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label for="categoria">Categoria</label> <select
-					class="form-control" id="categoria" th:field=*{categoria} th:errorClass="is-invalid">
-					
+					class="form-control" id="categoria" th:field=*{categoria}
+					th:errorClass="is-invalid">
+
 					<option th:each="categoria : ${categorie}"
 						th:value="${categoria.id}" th:text="${categoria.nome}"></option>
 				</select>
-					<div th:if="${#fields.hasErrors('categoria')}" class="invalid-field">
+				<div th:if="${#fields.hasErrors('categoria')}" class="invalid-field">
 					<ul>
-						<li th:each="err : ${#fields.errors('categoria')}" 
+						<li th:each="err : ${#fields.errors('categoria')}"
 							th:text="${err}"></li>
 					</ul>
 				</div>

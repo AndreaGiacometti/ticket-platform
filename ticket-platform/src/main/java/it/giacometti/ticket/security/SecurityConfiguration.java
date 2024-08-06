@@ -24,7 +24,8 @@ public class SecurityConfiguration {
                 .permitAll())
         .formLogin(formLogin -> formLogin
                 .successHandler(new CustomAuthenticationSuccessHandler()))
-        .logout(withDefaults());
+        .logout(withDefaults())
+        .csrf(withDefaults());
     
 		return http.build();
     }

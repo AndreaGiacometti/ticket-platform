@@ -2,7 +2,9 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Modifica Utente</title>
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
+<title>Modifica Operatore</title>
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
 	rel="stylesheet">
@@ -12,11 +14,15 @@
 </head>
 <body>
 	<div class="container mt-5">
-		<h2 class="text-center mb-4">Modifica Utente</h2>
+		<h2 class="text-center mb-4">Modifica Operatore</h2>
 
 
 		<form th:action="@{/operatore/updateStatus}" th:object="${user}"
 			method="post">
+
+			<!-- Campo nascosto per token csrf -->
+			<input type="hidden" th:name="${_csrf.parameterName}"
+				th:value="${_csrf.token}" />
 
 			<!-- campo nascosto per l'id operatore -->
 			<input type="hidden" name="id" th:value="${user.id}" />

@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="_csrf" th:content="${_csrf.token}" />
+<meta name="_csrf_header" th:content="${_csrf.headerName}" />
 <title>Dashboard Operatore</title>
 <link
 	href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css"
@@ -12,8 +13,11 @@
 	rel="stylesheet">
 </head>
 <body>
-	<div class="container mt-4">
-		<h1 class="mb-4">Dashboard Operatore</h1>
+	 <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="mb-0">Dashboard Operatore</h1>
+            <a href="/logout" class="btn btn-primary">Logout</a>
+        </div>
 		<div class="container mt-5">
 			<div class="row">
 				<div class="col-md-6 mb-4">
