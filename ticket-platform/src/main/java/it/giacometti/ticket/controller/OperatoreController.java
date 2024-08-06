@@ -147,7 +147,7 @@ public class OperatoreController {
 
 
         if (!allTicketsCompleted && "non attivo".equals(editUser.getStatoPersonale())) {
-            bindingResult.rejectValue("statoPersonale", "error.user", "Non puoi cambiare lo stato dell'utente in 'non attivo' perché non tutti i ticket sono completati.");
+            bindingResult.rejectValue("statoPersonale", "error.user", "Non puoi impostare il tuo stato su 'non attivo' finché non completi tutti i ticket.");
         }
 
         if (bindingResult.hasErrors()) {
